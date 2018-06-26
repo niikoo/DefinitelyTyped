@@ -696,6 +696,12 @@ declare namespace Fancytree {
         response: any;
     }
 
+    interface EditEventData extends EventData {
+        input?: any;
+        save?: any;
+        isNew?: boolean;
+    }
+
     /** The `this` context of any event function is set to tree's the HTMLDivElement  */
     interface FancytreeEvents {
         /** 'data.node' was deactivated. */
@@ -757,7 +763,12 @@ declare namespace Fancytree {
         /** Enable RTL version, default is false */
         rtl?: boolean;
     }
-
+    interface FancytreeSource {
+        /** Relative or absolute url */
+        url: string;
+        /** In milliseconds */
+        debugDelay: number;
+    }
     interface FancytreeOptions extends FancytreeEvents {
         /** Make sure that the active node is always visible, i.e. its parents are expanded (default: true). */
         activeVisible?: boolean;
@@ -766,15 +777,22 @@ declare namespace Fancytree {
             /**
              * HTTP Method (default: 'GET')
              */
-            type: string;
+            type?: string;
             /**
              * false: Append random '_' argument to the request url to prevent caching.
              */
-            cache: boolean;
+            cache?: boolean;
             /**
              * Default 'json' -> Expect json format and pass json object to callbacks.
              */
-            dataType: string;
+            dataType?: string;
+            /**
+             * In milliseconds
+             * Don't use this for production.
+             * @example
+             * debugDelay: [200, 1000]
+             * */
+            debugDelay?: number[];
         };
         /** (default: false) Add WAI-ARIA attributes to markup */
         aria?: boolean;
@@ -785,11 +803,16 @@ declare namespace Fancytree {
         /** Scroll node into visible area, when focused by keyboard (default: false). */
         autoScroll?: boolean;
         /** Display checkboxes to allow selection (default: false) */
-        checkbox?: boolean | string | ((event: JQueryEventObject, data: EventData) => boolean);
+        checkbox?: 'radio' | boolean | string | ((event: JQueryEventObject, data: EventData) => boolean | string);
         /** Defines what happens, when the user click a folder node. (default: activate_dblclick_expands) */
         clickFolderMode?: FancytreeClickFolderMode;
-        /** 0..4 (null: use global setting $.ui.fancytree.debugInfo) */
-        debugLevel?: 0 | 1 | 2 | 3 | 4;
+        /** The following options are only required when you have more than one tree on the page. */
+        cookieId?: string;
+        /**
+         * 0..4 (null: use global setting $.ui.fancytree.debugInfo)
+         * 0:quiet, 1:errors, 2:warnings, 3:infos, 4:debug
+         */
+        debugLevel?: 0 | 1 | 2 | 3 | 4 | null;
         /** callback(node) is called for new nodes without a key. Must return a new unique key. (default null: generates default keys like that: "_" + counter) */
         defaultKey?: (node: FancytreeNode) => string;
         /** Accept passing ajax data in a property named `d` (default: true). */
@@ -802,19 +825,33 @@ declare namespace Fancytree {
         focusOnSelect?: boolean;
         /** Add `id="..."` to node markup (default: true). */
         generateIds?: boolean;
-        /** Node icon url, if only filename, please use imagePath to set the path */
-        icon?: boolean | string;
-        /** Prefix (default: "ft_") */
+        /**
+         * Node icon url, if only filename, please use imagePath to set the path
+         * @see http://wwwendt.de/tech/fancytree/demo/#sample-ext-glyph-svg.html
+         **/
+        icon?: (event: JQueryEventObject, data: EventData) => { html: string } | string | boolean;
+        /**
+         * Prefix (default: "ft_")
+         * Only required when you have more than one tree on the page.
+         * */
         idPrefix?: string;
         /** Path to a folder containing icons (default: null, using 'skin/' subdirectory). */
         imagePath?: string;
         /** Support keyboard navigation (default: true). */
         keyboard?: boolean;
-        /** (default: "/") */
+        /** Used by node.getKeyPath() and tree.loadKeyPath() (default: "/") */
         keyPathSeparator?: string;
+        /**
+         * Lazy loading
+         * @example
+         * lazyLoad: function(event, data) {
+         *      data.result = {url: "ajax-sub2.json", debugDelay: 3000};
+         * }
+         * */
+        lazyLoad?: (event: JQueryEventObject, data: EventData) => void;
         /** 2: top-level nodes are not collapsible (default: 1) */
         minExpandLevel?: number;
-        /** navigate to next node by typing the first letters (default: false) */
+        /** Jump to nodes when pressing first character (default: false) */
         quicksearch?: boolean;
         /** Right to left mode (default: false) */
         rtl?: false;
@@ -825,12 +862,15 @@ declare namespace Fancytree {
         /** default: multi_hier */
         selectMode?: FancytreeSelectMode;
         /** Used to Initialize the tree. */
-        source?: any[] | any;
+        source?: FancytreeSource | NodeData[];
         /** Translation table */
         strings?: TranslationTable;
         /** Add tabindex='0' to container, so tree can be reached using TAB */
         tabbable?: boolean;
-        /** Add tabindex='0' to node title span, so it can receive keyboard focus */
+        /**
+         * Add all node titles to TAB chain
+         * Add tabindex='0' to node title span, so it can receive keyboard focus
+         * */
         titlesTabbable?: boolean;
         /** Animation options, false:off (default: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 200 }) */
         toggleEffect?: JQueryUI.EffectOptions;
@@ -847,9 +887,25 @@ declare namespace Fancytree {
         ////////////////
         // EXTENSIONS //
         ////////////////
-        dnd5?: Extensions.DragAndDrop5;
+        childcounter?: Extensions.ChildCounter;
+        clones?: Extensions.Clones;
+        columnview?: Extensions.ColumnView;
+        /** jQuery Drag and Drop */
+        dnd?: Extensions.DragAndDrop;
+        /** HTML5 Drag and Drop */
+        dnd5?: Extensions.DragAndDrop;
+        edit: Extensions.Edit;
         filter?: Extensions.Filter;
+        fixed?: Extensions.FixedHeaders;
+        /**
+         * Glyph extensions - fontawesome, glyphicons, etc.
+         * @see https://github.com/mar10/fancytree/wiki/ExtGlyph
+         */
+        glyph?: Extensions.Glyph;
+        gridnav?: Extensions.Gridnav;
+        multi?: Extensions.MultiSelect;
         table?: Extensions.Table;
+        wide?: Extensions.Wide;
 
         /** Options for misc extensions - see docs for typings */
         [extension: string]: any;
@@ -876,13 +932,92 @@ declare namespace Fancytree {
 
     namespace Extensions {
         interface List {
-            dnd5?: DragAndDrop5;
+            childcounter: ChildCounter;
+            clones: Clones;
+            columnview: ColumnView;
+            dnd?: DragAndDrop
+            dnd5?: DragAndDrop;
+            edit?: Edit;
             filter?: Filter;
+            fixed?: FixedHeaders;
+            glyph?: Glyph;
+            gridnav?: Gridnav;
+            multi?: MultiSelect;
+            persist?: Persist;
             table?: Table;
+            wide?: Wide;
             [extension: string]: any;
         }
 
-        interface DragAndDrop5 {
+        enum GlyphPreset {
+            awesome3,
+            awesome4,
+            awesome5,
+            bootstrap3,
+            material
+        }
+
+        interface Clones {
+            highlightClones?: boolean;
+        }
+
+        interface ColumnView {
+            [key: string]: any;
+        }
+
+        interface ChildCounter {
+            deep?: boolean;
+            hideZeros?: boolean;
+            hideExpanded?: boolean;
+        }
+
+        interface Edit {
+            /**
+             * @example
+             * ["clickActive", "dblclick", "f2", "mac+enter", "shift+click"]
+             */
+            triggerStart?: string[],
+            /** Return false to prevent cancel/save (data.input is available) */
+            beforeClose?: (event: JQueryEventObject, data: EditEventData) => void;
+            /** Return false to prevent edit mode */
+            beforeEdit?: (event: JQueryEventObject, data: EditEventData) => void;
+            /** Editor was removed */
+            close?: (event: JQueryEventObject, data: EditEventData) => void;
+            /** Editor was opened (available as data.input) */
+            edit?: (event: JQueryEventObject, data: EditEventData) => void;
+            /** Save data.input.val() or return false to keep editor open */
+            save?: (event: JQueryEventObject, data: EditEventData) => void;
+        }
+
+        interface FixedHeaders {
+            /** Fix leftmost n columns */
+            fixCols?: number;
+            /**
+             * @example
+             * fixColWidths: [16, 50, 200]
+             */
+            fixColWidths?: number[];
+            /** Fix topmost n rows (true: whole <thead>) */
+            fixRows?: number | true;
+        }
+
+        interface Gridnav {
+            autofocusInput?: boolean,
+            handleCursorKeys?: boolean,
+            /** Extra options */
+            [key: string]: any;
+        }
+
+        interface Glyph {
+            /** The preset defines defaults for all supported icon types. */
+            preset?: GlyphPreset | string;
+            /** Override distinct default icons here */
+            map?: { [key: string]: string };
+            /** Extra options */
+            [key: string]: any;
+        }
+
+        interface DragAndDrop {
             /**
              * Expand nodes after n milliseconds of hovering.
              */
@@ -1008,8 +1143,50 @@ declare namespace Fancytree {
              */
             [key: string]: any;
         }
+        enum MultiSelectMode {
+            sameLevel,
+            sameParent
+        }
         /**
-         * Define table-extension options
+         * Select node ranges using mouse and keyboard and Ctrl, Command, Shift modifiers.
+         * Edit the node titles with `[Shift] + click` '[Shift] + [Down]', ....
+         * Status: experimental.
+         * @see [Details: ext-multi]{@link http://wwwendt.de/tech/fancytree/demo/#sample-ext-multi.html}
+         */
+        interface MultiSelect {
+            mode?: MultiSelectMode | string | undefined;
+        }
+
+        enum PersistStore {
+            auto,
+            cookie,
+            /** localStorage */
+            local,
+            /** sessionStorage */
+            session
+        }
+
+        interface PersistCustomStore {
+            get: (key: string) => string;
+            set: (key: string, value: string) => void;
+            remove: (key: string) => void;
+        }
+
+        /**
+         * Store and restore tree status using cookies or local storage.
+         */
+        interface Persist {
+            expandLazy?: boolean;
+            /** false: suppress `activate` event after active node was restored */
+            fireActivate?: boolean;
+            /** true: cookie takes precedence over `source` data attributes. */
+            overrideSource?: boolean;
+            /** 'auto', cookie', 'local': use localStore, 'session': sessionStore */
+            store?: PersistStore | PersistCustomStore;
+        }
+
+        /**
+         * Render tree as a table (aka tree grid) and support keyboard navigation in a grid with embedded input controls.
          */
         interface Table {
             /**
@@ -1029,6 +1206,29 @@ declare namespace Fancytree {
              */
             [key: string]: any;
         }
+
+        /**
+         * Allow to apply jQuery ThemeRoller styles.
+         */
+        interface ThemeRoller {
+            addClass?: string;
+            selectedClass?: string;
+        }
+
+        interface Wide {
+            /**
+             * Adjust this if @fancy-icon-width != "16px"
+             * @example
+             * "1em"
+             */
+            iconWidth: string;
+            /** Adjust this if @fancy-icon-spacing != "3px" */
+            iconSpacing: string;
+            /** Adjust this if padding between icon and label != "3px" */
+            labelSpacing: string;
+            /** Adjust this if ul padding != "16px" */
+            levelOfs: string;
+        }
     }
 
 
@@ -1047,12 +1247,14 @@ declare namespace Fancytree {
         /** (initialization only, but will not be stored with the node). */
         focus?: boolean;
         folder?: boolean;
+        checkbox?: boolean;
         hideCheckbox?: boolean;
         lazy?: boolean;
         selected?: boolean;
         unselectable?: boolean;
         /** optional array of child nodes */
         children?: NodeData[];
+        cstrender?: any;
         tooltip?: string;
         /** class names added to the node markup (separate with space) */
         extraClasses?: string;
@@ -1073,6 +1275,9 @@ declare namespace Fancytree {
 
         /** Use this as constant selected value(overriding selectMode 3 propagation). */
         unselectableStatus?: boolean;
+
+        /** Support for future changes */
+        [key: string]: any;
     }
 
     /** Data object similar to NodeData, but with additional options.

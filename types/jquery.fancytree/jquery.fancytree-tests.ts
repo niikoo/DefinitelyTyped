@@ -22,9 +22,37 @@ $("#tree").fancytree(<Fancytree.FancytreeOptions>{
 			]
 		}
 	],
-	extensions: ['dnd5'],
+	extensions: ['dnd5', 'glyph'],
 	dnd5: {
 		dragDrag: (node, data) => { }
+	},
+	icon: (event, data) => {
+		const type = event.type;
+		switch (data.node.title) {
+			case "awesomeness":
+				return { html: '<i class="fa fa-book fa-fw"></i> ' };
+			default:
+				return { html: '<svg><use...' };
+		}
+		// (Optional dynamic icon definition...)
+	},
+	edit: {
+		close: function (event, data) {
+			if (data.save && data.isNew) {
+				// Quick-enter: add new nodes until we hit [enter] on an empty title
+				$("#tree").trigger("nodeCommand", { cmd: "addSibling" });
+			}
+		}
+	},
+	glyph: {
+		// The preset defines defaults for all supported icon types.
+		// It also defines a common class name that is prepended (in this case 'fa ')
+		preset: "awesome4",
+		map: {
+			// Override distinct default icons here
+			folder: "fa-folder",
+			folderOpen: "fa-folder-open"
+		}
 	},
 	click: (ev: JQueryEventObject, node: Fancytree.EventData) => {
 		return true;
@@ -125,3 +153,12 @@ node.addChildren({
 	unselectableIgnore: true,
 	unselectableStatus: false,
 }, 0);
+
+$("#tree").fancytree().generateFormElements();
+$("form").submit((elem) => {
+	// Render hidden <input> elements for active and selected nodes.
+	$("#tree").fancytree("getTree").generateFormElements();
+	alert("POST data:\r\n" + jQuery.param($(elem).serializeArray()));
+	// return false to prevent submission
+	return false;
+});
