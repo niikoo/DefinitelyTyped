@@ -1,4 +1,4 @@
-$("#tree").fancytree(<Fancytree.FancytreeOptions>{
+var ft = $("#tree").fancytree({
 	source: [
 		{ title: "Node 1", key: "1" },
 		{
@@ -6,6 +6,8 @@ $("#tree").fancytree(<Fancytree.FancytreeOptions>{
 				{ title: "Node 2.1", key: "3" },
 				{ title: "Node 2.2", key: "4" },
 				{
+					title: "t",
+					key: "-1",
 					foo: "bar",
 					baz: 17,
 					children: [
@@ -22,7 +24,7 @@ $("#tree").fancytree(<Fancytree.FancytreeOptions>{
 			]
 		}
 	],
-	extensions: ['dnd5', 'glyph'],
+	extensions: ['dnd5', 'glyph', 'edit', 'ariagrid'],
 	dnd5: {
 		dragDrag: (node, data) => { }
 	},
@@ -80,6 +82,8 @@ $("#tree").fancytree(<Fancytree.FancytreeOptions>{
 		return false;
 	}
 });
+
+ft.ariaPropName;
 
 //$("#tree").fancytree();
 
