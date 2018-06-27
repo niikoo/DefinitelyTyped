@@ -1,11 +1,13 @@
 import * as React from 'react';
 import {
+    Text,
     TouchableOpacity,
     View,
     ViewStyle,
 } from 'react-native';
 import {
     createDrawerNavigator,
+    createBottomTabNavigator,
     DrawerNavigatorConfig,
     NavigationAction,
     NavigationActions,
@@ -38,6 +40,8 @@ import {
     NavigationPopToTopAction,
     NavigationScreenComponent,
     NavigationContainerComponent,
+    withNavigation,
+    NavigationInjectedProps,
 } from 'react-navigation';
 
 // Constants
@@ -451,3 +455,80 @@ class Page2 extends React.Component {
         return <RootNavigator ref={(instance: NavigationContainerComponent | null): void => { this.navigatorRef = instance; }} />;
     }
 }
+
+const BottomStack = createBottomTabNavigator({
+    Posts: {
+        screen: Page2,
+        navigationOptions: ({ navigation }: NavigationScreenProps) => {
+            let tabBarVisible = true;
+
+            if (navigation.state.index > 0) {
+                tabBarVisible = false;
+            }
+
+            return {
+                tabBarVisible
+            };
+        }
+    }
+});
+
+const CustomHeaderStack = createStackNavigator({
+    Page1: { screen: Page1 },
+    Page2: { screen: Page2 }
+},
+{
+    navigationOptions: {
+        header: headerProps => {
+            const { scene } = headerProps;
+            const { options } = scene.descriptor;
+            const { title, headerStyle, headerTitleStyle } = options;
+            return (
+                <View style={headerStyle}>
+                    <Text style={headerTitleStyle}>{title}</Text>
+                </View>
+            );
+        }
+    }
+});
+
+interface ScreenProps {
+    name: string;
+    onPlay(): void;
+}
+
+class SetParamsTest extends React.Component<NavigationScreenProps<ScreenProps>> {
+    componentDidMount() {
+        this.props.navigation.setParams({
+            onPlay: this.onPlay
+        });
+    }
+
+    onPlay = () => {
+        //
+    }
+
+    render() {
+        const name = this.props.navigation.getParam('name');
+
+        return (
+            <Text>My name is {name}</Text>
+        );
+    }
+}
+
+// Test withNavigation
+
+interface BackButtonProps { title: string; }
+class MyBackButton extends React.Component<BackButtonProps & NavigationInjectedProps> {
+    render() {
+      return <button title={this.props.title} onClick={() => { this.props.navigation.goBack(); }} />;
+    }
+}
+
+// withNavigation returns a component that wraps MyBackButton and passes in the
+// navigation prop
+const BackButtonWithNavigation = withNavigation<BackButtonProps>(MyBackButton);
+const BackButtonInstance = <BackButtonWithNavigation
+    title="Back" onRef={ref => { const backButtonRef = ref; }}
+/>;
