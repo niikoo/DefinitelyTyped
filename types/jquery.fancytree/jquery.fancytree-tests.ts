@@ -38,8 +38,9 @@ var ft = $("#tree").fancytree({
 		}
 		// (Optional dynamic icon definition...)
 	},
+	scrollParent: $(document.body),
 	edit: {
-		close: function (event, data) {
+		close: (event, data) => {
 			if (data.save && data.isNew) {
 				// Quick-enter: add new nodes until we hit [enter] on an empty title
 				$("#tree").trigger("nodeCommand", { cmd: "addSibling" });
@@ -63,22 +64,22 @@ var ft = $("#tree").fancytree({
 	expand: () => {
 		console.log("expanded");
 	},
-	activate: function (event, data) {
+	activate: (event, data) => {
 		// A node was activated: display its title:
 		var node = data.node;
 		console.log(node.title);
 	},
-	beforeSelect: function (event, data) {
+	beforeSelect: (event, data) => {
 		// A node is about to be selected: prevent this for folders:
 		if (data.node.isFolder()) {
 			return false;
 		}
 	},
-	unselectable: function (event, data) {
+	unselectable: (event, data) => {
 		return true;
 	},
 	unselectableIgnore: false,
-	unselectableStatus: function (event, data) {
+	unselectableStatus: (event, data) => {
 		return false;
 	}
 });
