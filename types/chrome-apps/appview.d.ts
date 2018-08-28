@@ -49,3 +49,8 @@ declare interface Document {
 }
 
 declare const AppView: typeof HTMLAppViewElement;
+
+
+interface HTMLElementTagNameMap {
+    'appview': HTMLAppViewElement
+}

@@ -22,5 +22,6 @@ declare namespace chrome {
     }
 }
 
-declare var embedder: { webview: HTMLWebViewElement } | { [key: string]: any };
+interface Embedder extends Window { }
+declare var embedder: Embedder & { test: typeof chrome.test, webview: HTMLWebViewElement } & { [key: string]: any };
 declare var util: { [key: string]: any };

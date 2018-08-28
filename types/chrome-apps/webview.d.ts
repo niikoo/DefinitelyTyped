@@ -1560,3 +1560,8 @@ declare interface Document {
 }
 
 declare const WebView: typeof HTMLWebViewElement;
+
+
+interface HTMLElementTagNameMap {
+    'webview': HTMLWebViewElement
+}
