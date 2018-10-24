@@ -30,7 +30,7 @@ declare enum MacAlgorithm { HMAC_MD5, HMAC_SHA_1, HMAC_SHA_256, HMAC_SHA_384, HM
  * This service provides utilities for string encoding/decoding, date formatting, JSON manipulation,
  * and other miscellaneous tasks.
  */
-namespace Utilities {
+declare namespace Utilities {
   function base64Decode(encoded: string): Byte[];
   function base64Decode(encoded: string, charset: Charset): Byte[];
   function base64DecodeWebSafe(encoded: string): Byte[];
