@@ -31,8 +31,8 @@ function syncTeamVacationCalendar() {
     var today = new Date();
     var futureDate = new Date();
     futureDate.setMonth(futureDate.getMonth() + MONTHS_IN_ADVANCE);
-    var lastRun = PropertiesService.getScriptProperties().getProperty('lastRun');
-    lastRun = lastRun ? new Date(lastRun) : null;
+    var lastRunStr = PropertiesService.getScriptProperties().getProperty('lastRun');
+    var lastRun = lastRunStr ? new Date(lastRunStr) : null;
 
     // Get the list of users in the domain.
     var users = getDomainUsers();
@@ -68,7 +68,7 @@ function syncTeamVacationCalendar() {
             });
         });
     }
-    PropertiesService.getScriptProperties().setProperty('lastRun', today);
+    PropertiesService.getScriptProperties().setProperty('lastRun', today.toDateString());
     Logger.log('Imported ' + count + ' events');
     if (timeout) {
         Logger.log('Execution time about to hit quota limit; execution stopped.');
@@ -104,7 +104,7 @@ function findEvents(user: string, keyword: string, start: Date, end: Date, opt_s
     var results = [];
     try {
         var response = Calendar.Events.list(user, params);
-        results = response.items.filter(function (item) {
+        results = response.items.filter(function (item: any) {
             // Filter out events where the keyword did not appear in the summary
             // (that is, the keyword appeared in a different field, and are thus
             // is not likely to be relevant).
@@ -117,7 +117,7 @@ function findEvents(user: string, keyword: string, start: Date, end: Date, opt_s
                 if (!item.attendees) {
                     return false;
                 }
-                var matching = item.attendees.filter(function (attendee) {
+                var matching = item.attendees.filter(function (attendee: any) {
                     return attendee.self;
                 });
                 return matching.length > 0 && matching[0].status == 'accepted';
@@ -150,7 +150,7 @@ function getDomainUsers() {
         });
         var users = page.users;
         if (users) {
-            userEmails = userEmails.concat(users.map(function (user) {
+            userEmails = userEmails.concat(users.map(function (user: any) {
                 return user.primaryEmail;
             }));
         } else {
