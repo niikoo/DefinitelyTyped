@@ -1,6 +1,6 @@
-// Type definitions for Google Apps Script 2018-07-11
+// Type definitions for Google Apps Script 2018-10-24
 // Project: https://developers.google.com/apps-script/
-// Definitions by: motemen <https://github.com/motemen/>
+// Definitions by: motemen <https://github.com/motemen/>, niikoo <https://github.com/niikoo>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="google-apps-script.types.d.ts" />
@@ -10,6 +10,8 @@
 
 declare namespace GoogleAppsScript {
   export module Spreadsheet {
+    export type Column = string;
+    export type Row = Column[];
     /**
      * An enumeration of the types of series used to calculate auto-filled values. The manner in which
      * these series affect calculated values differs depending on the type and amount of source data.
@@ -168,9 +170,11 @@ declare namespace GoogleAppsScript {
     export enum CopyPasteType { PASTE_NORMAL, PASTE_NO_BORDERS, PASTE_FORMAT, PASTE_FORMULA, PASTE_DATA_VALIDATION, PASTE_VALUES, PASTE_CONDITIONAL_FORMATTING, PASTE_COLUMN_WIDTHS }
 
     /**
-     * Access data validation rules. To create a new rule, use SpreadsheetApp.newDataValidation() and DataValidationBuilder. You can use
-     * Range.setDataValidation(rule) to set the validation rule for a range.
-     *
+     * Access data validation rules.
+     * To create a new rule, use ´SpreadsheetApp.newDataValidation()´ and ´DataValidationBuilder´.
+     * You can use ´Range.setDataValidation(rule)´ to set the validation rule for a range.
+     * 
+     * @example
      *     // Log information about the data validation rule for cell A1.
      *     var cell = SpreadsheetApp.getActive().getRange('A1');
      *     var rule = cell.getDataValidation();
@@ -1085,8 +1089,8 @@ declare namespace GoogleAppsScript {
     export enum ProtectionType { RANGE, SHEET }
 
     /**
-     * Access and modify spreadsheet ranges. A range can be a single cell in a sheet or a group of
-     * adjacent cells in a sheet.
+     * Access and modify spreadsheet ranges.
+     * A range can be a single cell in a sheet or a group of adjacent cells in a sheet.
      */
     export interface Range {
       activate(): Range;
@@ -1321,27 +1325,100 @@ declare namespace GoogleAppsScript {
       getCurrentCell(): Range;
       getNextDataRange(direction: Direction): Range;
     }
-
+    export interface ClearOptions {
+      /** Whether to clear the content. */
+      contentsOnly: boolean;
+      /** Whether to clear the format. */
+      formatOnly: boolean;
+    }
     /**
      * Access and modify spreadsheet sheets. Common operations are renaming a sheet and accessing range
      * objects from the sheet.
      */
     export interface Sheet {
+      /**
+       * Activates this sheet.
+       * Does not alter the sheet itself, only the parent's notion of the active sheet.
+       */
       activate(): Sheet;
-      appendRow(rowContents: Object[]): Sheet;
+      /**
+       * Appends a row to the spreadsheet.
+       * This operation is atomic;
+       * it prevents issues where a user asks for the last row,
+       * and then writes to that row, and an intervening mutation
+       * occurs between getting the last row and writing to it.
+       * @param rowContents 	An array of values to insert after the last row in the sheet.
+       */
+      appendRow(rowContents: Row[]): Sheet;
+      /**
+       * Sets the width of the given column to fit its contents.
+       * @param columnPosition The position of the given column to resize.
+       */
       autoResizeColumn(columnPosition: Integer): Sheet;
+      /**
+       * Sets the width of all columns starting at the given column position to fit their contents.
+       * @param startColumn The starting column to auto-resize.
+       * @param numColumns The number of columns to auto-resize.
+       */
       autoResizeColumns(startColumn: Integer, numColumns: Integer): Sheet;
+      /**
+       * Sets the height of all rows starting at the given row position to fit their contents.
+       * @param startRow The starting row to auto-resize.
+       * @param numRows 	The number of rows to auto-resize.
+       */
       autoResizeRows(startRow: Integer, numRows: Integer): Sheet;
+      /**
+       * Clears the sheet of content and formatting information.
+       */
       clear(): Sheet;
-      clear(options: Object): Sheet;
+      /**
+       * Clears the sheet of contents and/or format, as specified with the given advanced options.
+       * @param options A JavaScript map containing advanced options.
+       */
+      clear(options: ClearOptions): Sheet;
+      /**
+       * Removes all conditional format rules from the sheet.
+       * Equivalent to calling `setConditionalFormatRules(rules)` with an empty array as input.
+       */
       clearConditionalFormatRules(): void;
+      /**
+       * Clears the sheet of contents, while preserving formatting information.
+       */
       clearContents(): Sheet;
+      /**
+       * Clears the sheet of formatting, while preserving contents.
+       * Formatting refers to how data is formatted as allowed by
+       * choices under the "Format" menu (ex: bold, italics,
+       * conditional formatting) and not width or height of cells.
+       */
       clearFormats(): Sheet;
+      /**
+       * Clears the sheet of all notes.
+       */
       clearNotes(): Sheet;
+      /**
+       * Collapses all column groups on the sheet.
+       */
       collapseAllColumnGroups(): Sheet;
+      /**
+       * Collapses all row groups on the sheet.
+       */
       collapseAllRowGroups(): Sheet;
+      /**
+       * Copies the sheet to a given spreadsheet, which can be the same spreadsheet as the source. The copied sheet is named "Copy of [original name]".
+       * @param spreadsheet The spreadsheet to copy this sheet to, which can be the same spreadsheet as the source.
+       */
       copyTo(spreadsheet: Spreadsheet): Sheet;
+      /**
+       * Deletes the column at the given column position.
+       * @param columnPosition The position of the column, starting at 1 for the first column.
+       */
       deleteColumn(columnPosition: Integer): Sheet;
+      /**
+       * Deletes a number of columns starting at the given column position.
+       * @param columnPosition The position of the first column to delete.
+       * @param howMany The number of columns to delete.
+       */
       deleteColumns(columnPosition: Integer, howMany: Integer): void;
       deleteRow(rowPosition: Integer): Sheet;
       deleteRows(rowPosition: Integer, howMany: Integer): void;
