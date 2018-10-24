@@ -6,6 +6,10 @@
 /// <reference path="google-apps-script.types.d.ts" />
 
 declare namespace Properties {
+  interface PropertyList {
+    [key: string]: string;
+  }
+
   /**
    * The properties object acts as the interface to access user, document, or script properties. The
    * specific property type depends on which of the three methods of PropertiesService the
@@ -17,10 +21,13 @@ declare namespace Properties {
     deleteAllProperties(): Properties;
     deleteProperty(key: string): Properties;
     getKeys(): string[];
-    getProperties(): Object;
+    getProperties(): PropertyList;
+    /**
+     * Gets the value associated with the given key in the current Properties store, or null if no such key exists.
+     */
     getProperty(key: string): string | null;
-    setProperties(properties: Object): Properties;
-    setProperties(properties: Object, deleteAllOthers: boolean): Properties;
+    setProperties(properties: PropertyList): Properties;
+    setProperties(properties: PropertyList, deleteAllOthers: boolean): Properties;
     setProperty(key: string, value: string): Properties;
   }
 
@@ -45,8 +52,9 @@ declare namespace Properties {
   }
 
   /**
-   *
-   * Deprecated. This class is deprecated and should not be used in new scripts.
+   * @deprecated
+   * This class is deprecated and should not be used in new scripts.
+   * @description
    * Script Properties are key-value pairs stored by a script in a persistent store. Script Properties
    * are scoped per script, regardless of which user runs the script.
    */
@@ -62,8 +70,9 @@ declare namespace Properties {
   }
 
   /**
-   *
-   * Deprecated. This class is deprecated and should not be used in new scripts.
+   * @deprecated
+   * This class is deprecated and should not be used in new scripts.
+   * @description
    * User Properties are key-value pairs unique to a user. User Properties are scoped per user; any
    * script running under the identity of a user can access User Properties for that user only.
    */
@@ -81,5 +90,7 @@ declare namespace Properties {
 }
 
 declare const PropertiesService: Properties.PropertiesService;
+/** @deprecated */
 declare const ScriptProperties: Properties.ScriptProperties;
+/** @deprecated */
 declare const UserProperties: Properties.UserProperties;
