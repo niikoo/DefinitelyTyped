@@ -4,10 +4,10 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 declare namespace GoogleAppsScript {
-  export module Slides_v1 {
+  namespace Slides_v1 {
     //// FILE: color.proto ////
     // An RGB color.
-    export interface RgbColor {
+    interface RgbColor {
       // The red component of the color, from 0.0 to 1.0.
       red: number
       // The green component of the color, from 0.0 to 1.0.
@@ -17,7 +17,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A themeable solid color value.
-    export interface OpaqueColor {
+    interface OpaqueColor {
       // The kind of color value.
       kind: {
         // An opaque RGB color.
@@ -28,14 +28,14 @@ declare namespace GoogleAppsScript {
     }
 
     // A color that can either be fully opaque or fully transparent.
-    export interface OptionalColor {
+    interface OptionalColor {
       // If set, this will be used as an opaque color. If unset, this represents
       // a transparent color.
       opaque_color: OpaqueColor
     }
 
     // The palette of predefined colors for a page.
-    export interface ColorScheme {
+    interface ColorScheme {
       // The ThemeColorType and corresponding concrete color pairs.
       colors: ThemeColorPair[]
     }
@@ -44,7 +44,7 @@ declare namespace GoogleAppsScript {
     //
     // Contain a ColorScheme that defines a mapping of
     // these theme color types to concrete colors.
-    export enum ThemeColorType {
+    enum ThemeColorType {
       // Unspecified theme color. This value should not be used.
       THEME_COLOR_TYPE_UNSPECIFIED,
       // Represents the first dark color.
@@ -82,7 +82,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A pair mapping a theme color type to the concrete color it represents.
-    export interface ThemeColorPair {
+    interface ThemeColorPair {
       // The type of the theme color.
       type: ThemeColorType
       // The concrete color corresponding to the theme color type above.
@@ -90,7 +90,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A color and position in a gradient band.
-    export interface ColorStop {
+    interface ColorStop {
       // The color of the gradient stop.
       color: OpaqueColor
       // The alpha value of this color in the gradient band. Defaults to 1.0,
@@ -103,7 +103,7 @@ declare namespace GoogleAppsScript {
 
     //// FILE: dimension.proto ////
     // Units of measurement.
-    export enum Unit {
+    enum Unit {
       // The units are unknown.
       UNIT_UNSPECIFIED,
       // An English Metric Unit (EMU) is defined as 1/360,000 of a centimeter
@@ -114,7 +114,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A magnitude in a single direction in the specified units.
-    export interface Dimension {
+    interface Dimension {
       // The magnitude.
       magnitude: number
       // The units for magnitude.
@@ -122,7 +122,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A width and height.
-    export interface Size {
+    interface Size {
       // The width of the object.
       width: Dimension
       // The height of the object.
@@ -131,7 +131,7 @@ declare namespace GoogleAppsScript {
 
     //// FILE: model.proto ////
     // A location of a single table cell within a table.
-    export interface TableCellLocation {
+    interface TableCellLocation {
       // The 0-based row index.
       row_index: number
 
@@ -144,7 +144,7 @@ declare namespace GoogleAppsScript {
     // Note: When you initially create a PageElement, the API may modify
     // the values of both `size` and `transform`, but the
     // visual size will be unchanged.
-    export interface PageElementProperties {
+    interface PageElementProperties {
       // The object ID of the page where the element is located.
       page_object_id: string
 
@@ -157,7 +157,7 @@ declare namespace GoogleAppsScript {
 
     // The general text content. The text must reside in a compatible shape (e.g.
     // text box or rectangle) or a table cell in a page.
-    export interface TextContent {
+    interface TextContent {
       // The text contents broken down into its component parts, including styling
       // information. This property is read-only.
       text_elements: TextElement[]
@@ -171,7 +171,7 @@ declare namespace GoogleAppsScript {
     // guarantee that these layouts are present in the current master as they
     // could have been deleted or not part of the used theme. Additionally,
     // the placeholders on each layout may have been changed.
-    export enum PredefinedLayout {
+    enum PredefinedLayout {
       // Unspecified layout.
       PREDEFINED_LAYOUT_UNSPECIFIED,
       // Blank layout, with no placeholders.
@@ -199,7 +199,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A Google Slides presentation.
-    export interface Presentation {
+    interface Presentation {
       // The ID of the presentation.
       presentation_id: string
       // The size of pages in the presentation.
@@ -268,7 +268,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A page in a presentation.
-    export interface Page {
+    interface Page {
       // The object ID for this page. Object IDs used by
       // Page and PageElement share the same namespace.
       object_id: string
@@ -329,7 +329,7 @@ declare namespace GoogleAppsScript {
     // The page will inherit properties from the parent page. Depending on the page
     // type the hierarchy is defined in either SlideProperties or
     // LayoutProperties.
-    export interface PageProperties {
+    interface PageProperties {
       // The background fill of the page. If unset, the background fill is inherited
       // from a parent page if it exists. If the page has no parent, then the
       // background fill defaults to the corresponding fill in the Slides editor.
@@ -342,7 +342,7 @@ declare namespace GoogleAppsScript {
 
     // The properties of Page that are only
     // relevant for pages with page_type SLIDE.
-    export interface SlideProperties {
+    interface SlideProperties {
       // The object ID of the layout that this slide is based on. This property is
       // read-only.
       layout_object_id: string
@@ -361,7 +361,7 @@ declare namespace GoogleAppsScript {
 
     // The properties of Page are only
     // relevant for pages with page_type LAYOUT.
-    export interface LayoutProperties {
+    interface LayoutProperties {
       // The object ID of the master that this layout is based on.
       master_object_id: string
       // The name of the layout.
@@ -372,7 +372,7 @@ declare namespace GoogleAppsScript {
 
     // The properties of Page that are only
     // relevant for pages with page_type NOTES.
-    export interface NotesProperties {
+    interface NotesProperties {
       // The object ID of the shape on this notes page that contains the speaker
       // notes for the corresponding slide.
       // The actual shape may not always exist on the notes page. Inserting text
@@ -384,14 +384,14 @@ declare namespace GoogleAppsScript {
 
     // The properties of Page that are only
     // relevant for pages with page_type MASTER.
-    export interface MasterProperties {
+    interface MasterProperties {
       // The human-readable name of the master.
       display_name: string
     }
 
     // A visual element rendered on a page.
     // (== resource_for v1.presentations.pages.pageElements ==)
-    export interface PageElement {
+    interface PageElement {
       // The object ID for this page element. Object IDs used by
       // Page and PageElement share the same namespace.
       object_id: string
@@ -437,13 +437,13 @@ declare namespace GoogleAppsScript {
     }
 
     // A PageElement kind representing a joined collection of PageElements.
-    export interface Group {
+    interface Group {
       // The collection of elements in the group. The minimum size of a group is 2.
       children: PageElement[]
     }
 
     // The shape types.
-    export enum ShapeType {
+    enum ShapeType {
       // The shape type that is not predefined.
       TYPE_UNSPECIFIED,
       // Text box shape.
@@ -819,7 +819,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The type of the placeholder.
-    export enum PlaceholderType {
+    enum PlaceholderType {
       // Default value, signifies it is not a placeholder.
       NONE,
       // Body text.
@@ -857,7 +857,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The placeholder information that uniquely identifies a placeholder shape.
-    export interface Placeholder {
+    interface Placeholder {
       // The type of a placeholder shape.
       //
       // Many of these placeholder types correspond to placeholder ids from the
@@ -900,7 +900,7 @@ declare namespace GoogleAppsScript {
     // properties may be inherited from a parent placeholder shape.
     // Determining the rendered value of the property depends on the corresponding
     // property_state field value.
-    export interface ShapeProperties {
+    interface ShapeProperties {
       // The background fill of the shape. If unset, the background fill is
       // inherited from a parent placeholder if it exists. If the shape has no
       // parent, then the default background fill depends on the shape type,
@@ -932,7 +932,7 @@ declare namespace GoogleAppsScript {
     // in section 20.1.10.59 of "Office Open XML File Formats - Fundamentals and
     // Markup Language Reference", part 1 of [ECMA-376 4th edition]
     // (http://www.ecma-international.org/publications/standards/Ecma-376.htm).
-    export enum ContentAlignment {
+    enum ContentAlignment {
       // An unspecified content alignment. The content alignment is inherited from
       // the parent if it exists.
       CONTENT_ALIGNMENT_UNSPECIFIED,
@@ -950,7 +950,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A PageElement kind representing an image.
-    export interface Image {
+    interface Image {
       // An URL to an image with a default lifetime of 30 minutes.
       // This URL is tagged with the account of the requester. Anyone with the URL
       // effectively accesses the image as the original requester. Access to the
@@ -964,7 +964,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The properties of the Image.
-    export interface ImageProperties {
+    interface ImageProperties {
       // The crop properties of the image. If not set, the image is not cropped.
       // This property is read-only.
       crop_properties: CropProperties
@@ -1001,7 +1001,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A PageElement kind representing a video.
-    export interface Video {
+    interface Video {
       // An URL to a video. The URL is valid as long as the source video exists and
       // sharing settings do not change.
       url: string
@@ -1014,7 +1014,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The properties of the Video.
-    export interface VideoProperties {
+    interface VideoProperties {
       // The outline of the video. The default outline matches the defaults for new
       // videos created in the Slides editor.
       outline: Outline
@@ -1079,7 +1079,7 @@ declare namespace GoogleAppsScript {
 
     // A PageElement kind representing a
     // non-connector line, straight connector, curved connector, or bent connector.
-    export interface Line {
+    interface Line {
       // The properties of the line.
       line_properties: LineProperties
       // The type of the line.
@@ -1087,7 +1087,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The catgory of a Line.
-    export enum LineCategory {
+    enum LineCategory {
       // Unspecified line category.
       LINE_CATEGORY_UNSPECIFIED,
       // Straight connectors, including straight connector 1.
@@ -1099,7 +1099,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The fill of the line.
-    export interface LinePropertiesLineFill {
+    interface LinePropertiesLineFill {
       // The kind of line fill.
       kind: {
         // Solid color fill.
@@ -1112,7 +1112,7 @@ declare namespace GoogleAppsScript {
     // described in section 20.1.10.33 of "Office Open XML File Formats -
     // Fundamentals and Markup Language Reference", part 1 of [ECMA-376 4th
     // edition](http://www.ecma-international.org/publications/standards/Ecma-376.htm).
-    export enum LinePropertiesArrowStyle {
+    enum LinePropertiesArrowStyle {
       // An unspecified arrow style.
       ARROW_STYLE_UNSPECIFIED,
       // No arrow.
@@ -1142,7 +1142,7 @@ declare namespace GoogleAppsScript {
     //
     // When unset, these fields default to values that match the appearance of
     // new lines created in the Slides editor.
-    export interface LineProperties {
+    interface LineProperties {
       // The fill of the line. The default line fill matches the defaults for new
       // lines created in the Slides editor.
       line_fill: LinePropertiesLineFill
@@ -1159,7 +1159,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A PageElement kind representing a table.
-    export interface Table {
+    interface Table {
       // Number of rows in the table.
       rows: number
       // Number of columns in the table.
@@ -1188,13 +1188,13 @@ declare namespace GoogleAppsScript {
     }
 
     // Properties of each column in a table.
-    export interface TableColumnProperties {
+    interface TableColumnProperties {
       // Width of a column.
       column_width: Dimension
     }
 
     // Properties and contents of each row in a table.
-    export interface TableRow {
+    interface TableRow {
       // Height of a row.
       row_height: Dimension
       // Properties of the row.
@@ -1208,7 +1208,7 @@ declare namespace GoogleAppsScript {
     }
 
     // Properties of each row in a table.
-    export interface TableRowProperties {
+    interface TableRowProperties {
       // Minimum height of the row. The row will be rendered in the Slides editor at
       // a height equal to or greater than this value in order to show all the text
       // in the row's cell(s).
@@ -1216,7 +1216,7 @@ declare namespace GoogleAppsScript {
     }
 
     // Properties and contents of each table cell.
-    export interface TableCell {
+    interface TableCell {
       // The location of the cell within the table.
       location: TableCellLocation
       // Row span of the cell.
@@ -1230,7 +1230,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The table cell background fill.
-    export interface TableCellPropertiesTableCellBackgroundFill {
+    interface TableCellPropertiesTableCellBackgroundFill {
       // The background fill property state.
       //
       // Updating the fill on a table cell will implicitly update this field
@@ -1246,7 +1246,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The properties of the TableCell.
-    export interface TableCellProperties {
+    interface TableCellProperties {
       // The background fill of the table cell. The default fill matches the fill
       // for newly created table cells in the Slides editor.
       table_cell_background_fill: TableCellPropertiesTableCellBackgroundFill
@@ -1256,14 +1256,14 @@ declare namespace GoogleAppsScript {
     }
 
     // Contents of each border row in a table.
-    export interface TableBorderRow {
+    interface TableBorderRow {
       // Properties of each border cell. When a border's adjacent table cells are
       // merged, it is not included in the response.
       table_border_cells: TableBorderCell[]
     }
 
     // The properties of each border cell.
-    export interface TableBorderCell {
+    interface TableBorderCell {
       // The location of the border within the border table.
       location: TableCellLocation
       // The border properties.
@@ -1271,7 +1271,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The fill of the border.
-    export interface TableBorderPropertiesTableBorderFill {
+    interface TableBorderPropertiesTableBorderFill {
       // The kind of fill.
       kind: {
         // Solid fill.
@@ -1280,7 +1280,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The border styling properties of the TableBorderCell.
-    export interface TableBorderProperties {
+    interface TableBorderProperties {
       // The fill of the table border.
       table_border_fill: TableBorderPropertiesTableBorderFill
       // The thickness of the border.
@@ -1307,7 +1307,7 @@ declare namespace GoogleAppsScript {
     //      [ x ][ x ][   ]
     //      [      x      ]
     //
-    export interface TableRange {
+    interface TableRange {
       // The starting location of the table range.
       location: TableCellLocation
       // The row span of the table range.
@@ -1317,13 +1317,13 @@ declare namespace GoogleAppsScript {
     }
 
     // A PageElement kind representing word art.
-    export interface WordArt {
+    interface WordArt {
       // The text rendered as word art.
       rendered_text: string
     }
 
     // A PageElement kind representing a linked chart embedded from Google Sheets.
-    export interface SheetsChart {
+    interface SheetsChart {
       // The ID of the Google Sheets spreadsheet that contains the source chart.
       spreadsheet_id: string
       // The ID of the specific chart in the Google Sheets spreadsheet that is
@@ -1339,7 +1339,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The properties of the SheetsChart.
-    export interface SheetsChartProperties {
+    interface SheetsChartProperties {
       // The kind of Sheets chart properties.
       kind: {
         // The properties of the embedded chart image.
@@ -1371,7 +1371,7 @@ declare namespace GoogleAppsScript {
 
     // The stretched picture fill. The page or page element is filled entirely with
     // the specified picture. The picture is stretched to fit its container.
-    export interface StretchedPictureFill {
+    interface StretchedPictureFill {
       // Reading the content_url:
       //
       // An URL to a picture with a default lifetime of 30 minutes.
@@ -1398,7 +1398,7 @@ declare namespace GoogleAppsScript {
     //
     // If any field is unset, its value may be inherited from a parent placeholder
     // if it exists.
-    export interface SolidFill {
+    interface SolidFill {
       // The color value of the solid fill.
       color: OpaqueColor,
       // The fraction of this `color` that should be applied to the pixel.
@@ -1426,7 +1426,7 @@ declare namespace GoogleAppsScript {
     // if it exists. If there is no parent, the fields will default to the value
     // used for new page elements created in the Slides editor, which may depend on
     // the page element kind.
-    export interface Outline {
+    interface Outline {
       // Solid color fill.
       solid_fill: SolidFill
       // The fill of the outline.
@@ -1450,7 +1450,7 @@ declare namespace GoogleAppsScript {
     // section 20.1.10.48 of "Office Open XML File Formats - Fundamentals and
     // Markup Language Reference", part 1 of [ECMA-376 4th
     // edition](http://www.ecma-international.org/publications/standards/Ecma-376.htm).
-    export enum DashStyle {
+    enum DashStyle {
       // Unspecified dash style.
       DASH_STYLE_UNSPECIFIED,
       // Solid line. Corresponds to ECMA-376 ST_PresetLineDashVal value 'solid'.
@@ -1472,7 +1472,7 @@ declare namespace GoogleAppsScript {
     }
 
     // Defines reference positions in a rectangle.
-    export enum RectanglePosition {
+    enum RectanglePosition {
       // Unspecified.
       RECTANGLE_POSITION_UNSPECIFIED,
       // Top left.
@@ -1496,7 +1496,7 @@ declare namespace GoogleAppsScript {
     }
 
     // The shadow types.
-    export enum ShadowType {
+    enum ShadowType {
       // Unspecified shadow type.
       SHADOW_TYPE_UNSPECIFIED,
       // Outer shadow.
@@ -1509,7 +1509,7 @@ declare namespace GoogleAppsScript {
     // if it exists. If there is no parent, the fields will default to the value
     // used for new page elements created in the Slides editor, which may depend on
     // the page element kind.
-    export interface Shadow {
+    interface Shadow {
       // The type of the shadow.
       type: ShadowType,
       // Transform that encodes the translate, scale, and skew of the shadow,
@@ -1556,7 +1556,7 @@ declare namespace GoogleAppsScript {
     //
     // After cropping, the content in the crop rectangle will be stretched to fit
     // its container.
-    export interface CropProperties {
+    interface CropProperties {
       // The offset specifies the left edge of the crop rectangle that is located to
       // the right of the original bounding rectangle left edge, relative to the
       // object's original width.
@@ -1579,7 +1579,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A recolor effect applied on an image.
-    export enum RecolorName {
+    enum RecolorName {
       // No recolor effect. The default value.
       NONE,
       // A recolor effect that lightens the image using the page's first available
@@ -1654,7 +1654,7 @@ declare namespace GoogleAppsScript {
     }
 
     // A recolor effect applied on an image.
-    export interface Recolor {
+    interface Recolor {
       // The recolor effect is represented by a gradient, which is a list of color
       // stops.
       //
@@ -1674,7 +1674,7 @@ declare namespace GoogleAppsScript {
 
     //// FILE: slides.proto ////
     // GetPage, CreatePresentation, BatchUpdatePresentation, GetPageThumbnail are not used.
-    // TODO export top level methods
+    // TODO top level methods
 
     //// FILE: text.proto ////
     // A TextElement describes the content of a range of indices in the text content
