@@ -18,6 +18,9 @@
     },
     "files": [
         "index.d.ts",
-        "google-apps-script-tests.ts"
+        "tests/index.ts",
+        "tests/docs.gs.ts",
+        "tests/slides.gs.ts",
+        "tests/spreadsheet.gs.ts"
     ]
 }
