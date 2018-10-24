@@ -6,7 +6,7 @@
 /// <reference path="google-apps-script.types.d.ts" />
 /// <reference path="google-apps-script.base.d.ts" />
 
-declare namespace Calendar {
+declare namespace GCalendar {
   /**
    * Represents a calendar that the user owns or is subscribed to.
    */
@@ -306,4 +306,4 @@ declare namespace Calendar {
 
 }
 
-declare const CalendarApp: Calendar.CalendarApp;
+declare const CalendarApp: GCalendar.CalendarApp;
