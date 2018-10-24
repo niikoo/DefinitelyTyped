@@ -13,16 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference types="gapi.client.calendar" />
-
-var EventsResource: gapi.client.calendar.Event & gapi.client.calendar.EventsResource;
-const Calendar = {
-    Events: EventsResource
-}
-const AdminDirectory = {
-    Users: <any>{}
-}
-
 // [START apps_script_calendar_vacation]
 var TEAM_CALENDAR_ID = 'ENTER_TEAM_CALENDAR_ID_HERE';
 var KEYWORDS = ['vacation', 'ooo', 'out of office'];
@@ -41,8 +31,8 @@ function syncTeamVacationCalendar() {
     var today = new Date();
     var futureDate = new Date();
     futureDate.setMonth(futureDate.getMonth() + MONTHS_IN_ADVANCE);
-    var lastRunStr = PropertiesService.getScriptProperties().getProperty('lastRun');
-    var lastRun = lastRunStr ? new Date(lastRunStr) : null;
+    var lastRun = PropertiesService.getScriptProperties().getProperty('lastRun');
+    lastRun = lastRun ? new Date(lastRun) : null;
 
     // Get the list of users in the domain.
     var users = getDomainUsers();
@@ -69,7 +59,7 @@ function syncTeamVacationCalendar() {
                 event.attendees = [];
                 Logger.log('Importing: %s', event.summary);
                 try {
-                    Calendar.Events.import(event); // , TEAM_CALENDAR_ID);
+                    Calendar.Events.import(event, TEAM_CALENDAR_ID);
                     count++;
                 } catch (e) {
                     Logger.log(
@@ -78,7 +68,7 @@ function syncTeamVacationCalendar() {
             });
         });
     }
-    PropertiesService.getScriptProperties().setProperty('lastRun', today.toDateString());
+    PropertiesService.getScriptProperties().setProperty('lastRun', today);
     Logger.log('Imported ' + count + ' events');
     if (timeout) {
         Logger.log('Execution time about to hit quota limit; execution stopped.');
@@ -111,10 +101,10 @@ function findEvents(user: string, keyword: string, start: Date, end: Date, opt_s
         // script was run).
         params['updatedMin'] = formatDate(opt_since);
     }
-    var results = <any>[];
+    var results = [];
     try {
-        var response = Calendar.Events.list({ userIp: user, ...params }) as gapi.client.calendar.FreeBusyRequest;
-        results = response.items.filter(function (item: any) {
+        var response = Calendar.Events.list(user, params);
+        results = response.items.filter(function (item) {
             // Filter out events where the keyword did not appear in the summary
             // (that is, the keyword appeared in a different field, and are thus
             // is not likely to be relevant).
@@ -127,7 +117,7 @@ function findEvents(user: string, keyword: string, start: Date, end: Date, opt_s
                 if (!item.attendees) {
                     return false;
                 }
-                var matching = item.attendees.filter(function (attendee: any) {
+                var matching = item.attendees.filter(function (attendee) {
                     return attendee.self;
                 });
                 return matching.length > 0 && matching[0].status == 'accepted';
@@ -160,7 +150,7 @@ function getDomainUsers() {
         });
         var users = page.users;
         if (users) {
-            userEmails = userEmails.concat(users.map(function (user: any) {
+            userEmails = userEmails.concat(users.map(function (user) {
                 return user.primaryEmail;
             }));
         } else {
