@@ -3,10 +3,9 @@
 // Definitions by: motemen <https://github.com/motemen/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-declare module GoogleAppsScript {
-  type BigNumber = any;
-  type Byte = number;
-  type Integer = number;
-  type Char = string;
-  type JdbcSQL_XML = any;
-}
+
+declare type BigNumber = any;
+declare type Byte = number | 'byte';
+declare type Integer = number | 'integer';
+declare type Char = string | 'char';
+declare type JdbcSQL_XML = any;
