@@ -16,25 +16,6 @@
  */
 
 /**
- * Runs when the document is opened.
- */
-function onOpen() {
-    DocumentApp.getUi().createMenu('Inspector')
-        .addItem('Show sidebar', 'showSidebar')
-        .addToUi();
-}
-
-/**
- * Show the sidebar.
- */
-function showSidebar() {
-    DocumentApp.getUi().showSidebar(
-        HtmlService.createTemplateFromFile('Sidebar').evaluate()
-            .setTitle('Cursor Inspector')
-            .setWidth(350));
-}
-
-/**
  * Returns the contents of an HTML file.
  * @param {string} file The name of the file to retrieve.
  * @return {string} The content of the file.

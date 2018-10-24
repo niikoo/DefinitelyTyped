@@ -19,7 +19,12 @@
     "files": [
         "index.d.ts",
         "tests/index.ts",
+        "tests/advanced.gs.ts",
+        "tests/apps-script.gs.ts",
+        "tests/calendar.gs.ts",
+        "tests/classroom.gs.ts",
         "tests/docs.gs.ts",
+        "tests/drive.gs.ts",
         "tests/slides.gs.ts",
         "tests/spreadsheet.gs.ts"
     ]
