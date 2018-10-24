@@ -1,6 +1,6 @@
-// Type definitions for Google Apps Script 2018-07-11
+// Type definitions for Google Apps Script 2018-10-24
 // Project: https://developers.google.com/apps-script/
-// Definitions by: motemen <https://github.com/motemen/>
+// Definitions by: motemen <https://github.com/motemen/>, niikoo <https://github.com/niikoo/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="google-apps-script.types.d.ts" />
@@ -17,6 +17,11 @@ declare namespace GoogleAppsScript {
      * Selector of Digest algorithm
      */
     export enum DigestAlgorithm { MD2, MD5, SHA_1, SHA_256, SHA_384, SHA_512 }
+
+    /**
+     * Selector of RSA algorithm
+     */
+    export enum RsaAlgorithm { RSA_SHA_1, RSA_SHA_256 }
 
     /**
      * Selector of MAC algorithm
@@ -50,6 +55,10 @@ declare namespace GoogleAppsScript {
       computeHmacSignature(algorithm: MacAlgorithm, value: Byte[], key: Byte[]): Byte[];
       computeHmacSignature(algorithm: MacAlgorithm, value: string, key: string): Byte[];
       computeHmacSignature(algorithm: MacAlgorithm, value: string, key: string, charset: Charset): Byte[];
+      computeRsaSignature(algorithm: RsaAlgorithm, value: string, key: string): Byte[];
+      computeRsaSignature(algorithm: RsaAlgorithm, value: string, key: string, charset: Charset): Byte[];
+      computeRsaSha1Signature(value: string, key: string): Byte[];
+      computeRsaSha1Signature(value: string, key: string, charset: Charset): Byte[];
       computeRsaSha256Signature(value: string, key: string): Byte[];
       computeRsaSha256Signature(value: string, key: string, charset: Charset): Byte[];
       formatDate(date: Date, timeZone: string, format: string): string;
