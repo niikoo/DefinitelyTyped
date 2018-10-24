@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference types="gapi.client.appsactivity" />
 // [START drive_activity_quickstart]
 /**
  * Lists activity for a Drive user.
  */
+var Client: typeof gapi.client;
+var AppsActivity = {
+    Activities: Client.activities
+};
 function listActivity() {
     var optionalArgs = {
         'source': 'drive.google.com',
         'drive.ancestorId': 'root',
         'pageSize': 10
     };
-    var response = AppsActivity.Activities.list(optionalArgs);
+    var response = AppsActivity.Activities.list(optionalArgs) as gapi.client.appsactivity.ListActivitiesResponse;
     var activities = response.activities;
     if (activities && activities.length > 0) {
         Logger.log('Recent activity:');
-        for (i = 0; i < activities.length; i++) {
+        for (var i = 0; i < activities.length; i++) {
             var activity = activities[i];
             var event = activity.combinedEvent;
             var user = event.user;
