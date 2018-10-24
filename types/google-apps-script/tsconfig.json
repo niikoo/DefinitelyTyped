@@ -19,7 +19,6 @@
     "files": [
         "index.d.ts",
         "tests/index.ts",
-        "tests/advanced.gs.ts",
         "tests/apps-script.gs.ts",
         "tests/calendar.gs.ts",
         "tests/classroom.gs.ts",
