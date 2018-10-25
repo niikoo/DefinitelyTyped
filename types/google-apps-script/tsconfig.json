@@ -18,7 +18,7 @@
     },
     "files": [
         "index.d.ts",
-        "tests/index.ts",
+        "tests/google-apps-script-tests.ts",
         "tests/apps-script.gs.ts",
         "tests/calendar.gs.ts",
         "tests/docs.gs.ts",
