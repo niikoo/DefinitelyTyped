@@ -142,16 +142,12 @@ declare namespace chrome.accessibilityFeatures {
          * Sets the value of a setting.
          * @param details Which setting to change.
          * @param callback Called at the completion of the set operation.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         set(details: AccessibilityFeaturesSetArg, callback?: () => void): void;
         /**
          * Clears the setting, restoring any default value.
          * @param details Which setting to clear.
          * @param callback Called at the completion of the clear operation.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         clear(details: AccessibilityFeaturesClearArg, callback?: () => void): void;
     }
@@ -759,93 +755,67 @@ declare namespace chrome.browsingData {
     /**
      * Clears plugins' data.
      * @param callback Called when plugins' data has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removePluginData(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears the browser's stored form data (autofill).
      * @param callback Called when the browser's form data has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeFormData(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears websites' file system data.
      * @param callback Called when websites' file systems have been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeFileSystems(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears various types of browsing data stored in a user's profile.
      * @param dataToRemove The set of data types to remove.
      * @param callback Called when deletion has completed.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function remove(options: RemovalOptions, dataToRemove: DataTypeSet, callback?: () => void): void;
     /**
      * Clears the browser's stored passwords.
      * @param callback Called when the browser's passwords have been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removePasswords(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears the browser's cookies and server-bound certificates modified within a particular timeframe.
      * @param callback Called when the browser's cookies and server-bound certificates have been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeCookies(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears websites' WebSQL data.
      * @param callback Called when websites' WebSQL databases have been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeWebSQL(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears websites' appcache data.
      * @param callback Called when websites' appcache data has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeAppcache(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears the browser's list of downloaded files (not the downloaded files themselves).
      * @param callback Called when the browser's list of downloaded files has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeDownloads(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears websites' local storage data.
      * @param callback Called when websites' local storage has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeLocalStorage(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears the browser's cache.
      * @param callback Called when the browser's cache has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeCache(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears the browser's history.
      * @param callback Called when the browser's history has cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeHistory(options: RemovalOptions, callback?: () => void): void;
     /**
      * Clears websites' IndexedDB data.
      * @param callback Called when websites' IndexedDB data has been cleared.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeIndexedDB(options: RemovalOptions, callback?: () => void): void;
 }
@@ -1342,15 +1312,11 @@ declare namespace chrome.contextMenus {
     /**
      * Removes all context menu items added by this extension.
      * @param callback Called when removal is complete.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeAll(callback?: () => void): void;
     /**
      * Creates a new context menu item. Note that if an error occurs during creation, you may not find out until the creation callback fires (the details will be in chrome.runtime.lastError).
      * @param callback Called when the item has been created in the browser. If there were any problems creating the item, details will be available in chrome.runtime.lastError.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function create(createProperties: CreateProperties, callback?: () => void): void;
     /**
@@ -1358,8 +1324,6 @@ declare namespace chrome.contextMenus {
      * @param id The ID of the item to update.
      * @param updateProperties The properties to update. Accepts the same values as the create function.
      * @param callback Called when the context menu has been updated.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function update(id: string, updateProperties: UpdateProperties, callback?: () => void): void;
     /**
@@ -1367,24 +1331,18 @@ declare namespace chrome.contextMenus {
      * @param id The ID of the item to update.
      * @param updateProperties The properties to update. Accepts the same values as the create function.
      * @param callback Called when the context menu has been updated.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function update(id: number, updateProperties: UpdateProperties, callback?: () => void): void;
     /**
      * Removes a context menu item.
      * @param menuItemId The ID of the context menu item to remove.
      * @param callback Called when the context menu has been removed.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function remove(menuItemId: string, callback?: () => void): void;
     /**
      * Removes a context menu item.
      * @param menuItemId The ID of the context menu item to remove.
      * @param callback Called when the context menu has been removed.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function remove(menuItemId: number, callback?: () => void): void;
 
@@ -1605,16 +1563,12 @@ declare module chrome {
          * @param target Debugging target to which you want to attach.
          * @param requiredVersion Required debugging protocol version ("0.1"). One can only attach to the debuggee with matching major version and greater or equal minor version. List of the protocol versions can be obtained in the documentation pages.
          * @param callback Called once the attach operation succeeds or fails. Callback receives no arguments. If the attach fails, runtime.lastError will be set to the error message.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         function attach(target: Debuggee, requiredVersion: string, callback?: () => void): void;
         /**
          * Detaches debugger from the given target.
          * @param target Debugging target from which you want to detach.
          * @param callback Called once the detach operation succeeds or fails. Callback receives no arguments. If the detach fails, runtime.lastError will be set to the error message.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         function detach(target: Debuggee, callback?: () => void): void;
         /**
@@ -2119,16 +2073,12 @@ declare namespace chrome.devtools.panels {
          * @param expression An expression to be evaluated in context of the inspected page. JavaScript objects and DOM nodes are displayed in an expandable tree similar to the console/watch.
          * @param rootTitle An optional title for the root of the expression tree.
          * @param callback A callback invoked after the sidebar pane is updated with the expression evaluation results.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         setExpression(expression: string, rootTitle?: string, callback?: () => void): void;
         /**
          * Sets an expression that is evaluated within the inspected page. The result is displayed in the sidebar pane.
          * @param expression An expression to be evaluated in context of the inspected page. JavaScript objects and DOM nodes are displayed in an expandable tree similar to the console/watch.
          * @param callback A callback invoked after the sidebar pane is updated with the expression evaluation results.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         setExpression(expression: string, callback?: () => void): void;
         /**
@@ -2136,16 +2086,12 @@ declare namespace chrome.devtools.panels {
          * @param jsonObject An object to be displayed in context of the inspected page. Evaluated in the context of the caller (API client).
          * @param rootTitle An optional title for the root of the expression tree.
          * @param callback A callback invoked after the sidebar is updated with the object.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         setObject(jsonObject: Object, rootTitle?: string, callback?: () => void): void;
         /**
          * Sets a JSON-compliant object to be displayed in the sidebar pane.
          * @param jsonObject An object to be displayed in context of the inspected page. Evaluated in the context of the caller (API client).
          * @param callback A callback invoked after the sidebar is updated with the object.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         setObject(jsonObject: Object, callback?: () => void): void;
         /**
@@ -2192,8 +2138,6 @@ declare namespace chrome.devtools.panels {
      * @param url The URL of the resource to open.
      * @param lineNumber Specifies the line number to scroll to when the resource is loaded.
      * @param callback A function that is called when the resource has been successfully loaded.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function openResource(url: string, lineNumber: number, callback: () => void): void;
 }
@@ -2439,8 +2383,6 @@ declare namespace chrome.downloads {
      * Pause the download. If the request was successful the download is in a paused state. Otherwise runtime.lastError contains an error message. The request will fail if the download is not active.
      * @param downloadId The id of the download to pause.
      * @param callback Called when the pause request is completed.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function pause(downloadId: number, callback?: () => void): void;
     /**
@@ -2463,16 +2405,12 @@ declare namespace chrome.downloads {
      * Resume a paused download. If the request was successful the download is in progress and unpaused. Otherwise runtime.lastError contains an error message. The request will fail if the download is not active.
      * @param downloadId The id of the download to resume.
      * @param callback  Called when the resume request is completed.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function resume(downloadId: number, callback?: () => void): void;
     /**
      * Cancel a download. When callback is run, the download is cancelled, completed, interrupted or doesn't exist anymore.
      * @param downloadId The id of the download to cancel.
      * @param callback Called when the cancel request is completed.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function cancel(downloadId: number, callback?: () => void): void;
     /**
@@ -2511,8 +2449,6 @@ declare namespace chrome.downloads {
      * Prompt the user to accept a dangerous download. Can only be called from a visible context (tab, window, or page/browser action popup). Does not automatically accept dangerous downloads. If the download is accepted, then an onChanged event will fire, otherwise nothing will happen. When all the data is fetched into a temporary file and either the download is not dangerous or the danger has been accepted, then the temporary file is renamed to the target filename, the |state| changes to 'complete', and onChanged fires.
      * @param downloadId The identifier for the DownloadItem.
      * @param callback Called when the danger prompt dialog closes.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function acceptDanger(downloadId: number, callback: () => void): void;
     /** Initiate dragging the downloaded file to another application. Call in a javascript ondragstart handler. */
@@ -2577,8 +2513,6 @@ declare namespace chrome.enterprise.platformKeys {
      * @param tokenId The id of a Token returned by getTokens.
      * @param certificate The DER encoding of a X.509 certificate.
      * @param callback Called back when this operation is finished.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function importCertificate(tokenId: string, certificate: ArrayBuffer, callback?: () => void): void;
     /**
@@ -2586,8 +2520,6 @@ declare namespace chrome.enterprise.platformKeys {
      * @param tokenId The id of a Token returned by getTokens.
      * @param certificate The DER encoding of a X.509 certificate.
      * @param callback Called back when this operation is finished.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeCertificate(tokenId: string, certificate: ArrayBuffer, callback?: () => void): void;
 }
@@ -2707,15 +2639,11 @@ declare namespace chrome.events {
          * Unregisters currently registered rules.
          * @param ruleIdentifiers If an array is passed, only rules with identifiers contained in this array are unregistered.
          * @param callback Called when rules were unregistered.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         removeRules(ruleIdentifiers?: string[], callback?: () => void): void;
         /**
          * Unregisters currently registered rules.
          * @param callback Called when rules were unregistered.
-         * If you specify the callback parameter, it should be a function that looks like this:
-         * function() {...};
          */
         removeRules(callback?: () => void): void;
         /**
@@ -3166,16 +3094,12 @@ declare namespace chrome.fileSystemProvider {
      * Depending on the type of the file system being mounted, the source option must be set appropriately.
      * In case of an error, runtime.lastError will be set with a corresponding error code.
      * @param callback A generic result callback to indicate success or failure.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function mount(options: MountOptions, callback?: () => void): void;
     /**
      * Unmounts a file system with the given fileSystemId. It must be called after onUnmountRequested is invoked. Also, the providing extension can decide to perform unmounting if not requested (eg. in case of lost connection, or a file error).
      * In case of an error, runtime.lastError will be set with a corresponding error code.
      * @param callback A generic result callback to indicate success or failure.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function unmount(options: UnmountOptions, callback?: () => void): void;
     /**
@@ -3201,8 +3125,6 @@ declare namespace chrome.fileSystemProvider {
      * Note that if a parent directory is removed, then all descendant entries are also removed, and if they are watched, then the API must be notified about the fact. Also, if a directory is renamed, then all descendant entries are in fact removed, as there is no entry under their original paths anymore.
      * In case of an error, runtime.lastError will be set will a corresponding error code.
      * @param callback A generic result callback to indicate success or failure.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function notify(options: NotificationOptions, callback: () => void): void;
 
@@ -3771,8 +3693,6 @@ declare namespace chrome.identity {
      * If an access token is discovered to be invalid, it should be passed to removeCachedAuthToken to remove it from the cache. The app may then retrieve a fresh token with getAuthToken.
      * @param details Token information.
      * @param callback Called when the token has been removed from the cache.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function removeCachedAuthToken(details: TokenInformation, callback?: () => void): void;
     /**
@@ -4148,8 +4068,6 @@ declare namespace chrome.input.ime {
     /**
      * Updates the state of the MenuItems specified
      * @param callback Called when the operation completes
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function updateMenuItems(parameters: MenuItemParameters, callback?: () => void): void;
     /**
@@ -4177,8 +4095,6 @@ declare namespace chrome.input.ime {
      * Sends the key events. This function is expected to be used by virtual keyboards. When key(s) on a virtual keyboard is pressed by a user, this function is used to propagate that event to the system.
      * @since Chrome 33.
      * @param callback Called when the operation completes.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function sendKeyEvents(parameters: SendKeyEventParameters, callback?: () => void): void;
     /**
@@ -4520,8 +4436,6 @@ declare namespace chrome.networking.config {
      * rejected: The extension handled this network, tried to authenticate, however was rejected by the server.
      * failed: The extension handled this network, tried to authenticate, however failed due to an unspecified error.
      * @param callback Called back when this operation is finished.
-     * If you specify the callback parameter, it should be a function that looks like this:
-     * function() {...};
      */
     function finishAuthentication(GUID: string, result: string, callback?: () => void): void;
 
