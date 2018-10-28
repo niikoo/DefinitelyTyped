@@ -131,6 +131,8 @@ function bookmarksExample() {
     });
 }
 
+
+
 // https://developer.chrome.com/extensions/examples/api/browserAction/make_page_red/background.js
 function pageRedder() {
     chrome.browserAction.onClicked.addListener(function (tab) {
@@ -151,14 +153,14 @@ function printPage() {
 }
 
 // https://developer.chrome.com/extensions/examples/extensions/catblock/background.js
-function catBlock () {
+function catBlock() {
     var loldogs: string[];
     chrome.webRequest.onBeforeRequest.addListener(
-        function(info) {
+        function (info) {
             console.log("Cat intercepted: " + info.url);
             // Redirect the lolcal request to a random loldog URL.
             var i = Math.round(Math.random() * loldogs.length);
-            return {redirectUrl: loldogs[i]};
+            return { redirectUrl: loldogs[i] };
         },
         // filters
         {
@@ -181,29 +183,31 @@ function beforeRedditNavigation() {
         }
 
         alert("Were you trying to go on reddit, during working hours? :(")
-    },{url: [
-        {hostSuffix: ".reddit.com"}
-    ]});
+    }, {
+        url: [
+            { hostSuffix: ".reddit.com" }
+        ]
+        });
 }
 
 // for chrome.tabs.InjectDetails.frameId
-function executeScriptFramed () {
+function executeScriptFramed() {
 
     const tabId = 123;
     const frameId = 0;
 
     const code = "alert('hi');";
 
-    chrome.tabs.executeScript({frameId, code});
-    chrome.tabs.insertCSS({frameId, code});
+    chrome.tabs.executeScript({ frameId, code });
+    chrome.tabs.insertCSS({ frameId, code });
 
-    chrome.tabs.executeScript(tabId, {frameId, code});
-    chrome.tabs.insertCSS(tabId, {frameId, code});
+    chrome.tabs.executeScript(tabId, { frameId, code });
+    chrome.tabs.insertCSS(tabId, { frameId, code });
 
 }
 
 // for chrome.tabs.TAB_ID_NONE
-function realTabsOnly () {
+function realTabsOnly() {
     chrome.webRequest.onBeforeRequest.addListener(function (details) {
         if (details.tabId === chrome.tabs.TAB_ID_NONE) {
             console.log("Request not related to a tab. %o", details);
@@ -211,8 +215,8 @@ function realTabsOnly () {
         }
         // ...
     }, {
-        urls: ["<all_urls>"]
-    });
+            urls: ["<all_urls>"]
+        });
 }
 
 // contrived settings example
@@ -230,7 +234,7 @@ function proxySettings() {
     chrome.proxy.settings.set({
         value: 'something',
         scope: 'regular'
-    }, () => {});
+    }, () => { });
 
     chrome.proxy.settings.clear({});
 
@@ -240,98 +244,98 @@ function proxySettings() {
 
 // https://developer.chrome.com/extensions/examples/api/contentSettings/popup.js
 function contentSettings() {
-  var incognito;
-  var url;
+    var incognito;
+    var url;
 
-  function settingChanged() {
-    var type = this.id;
-    var setting = this.value;
-    var pattern = /^file:/.test(url) ? url : url.replace(/\/[^\/]*?$/, '/*');
-    console.log(type+' setting for '+pattern+': '+setting);
-    // HACK: [type] is not recognised by the docserver's sample crawler, so
-    // mention an explicit
-    // type: chrome.contentSettings.cookies.set - See http://crbug.com/299634
-    chrome.contentSettings[type].set({
-          'primaryPattern': pattern,
-          'setting': setting,
-          'scope': (incognito ? 'incognito_session_only' : 'regular')
-        });
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    chrome.tabs.query({active: true, currentWindow: true, url: ['http://*/*', 'https://*/*'] }, function(tabs) {
-      var current = tabs[0];
-      incognito = current.incognito;
-      url = current.url;
-      var types = ['cookies', 'images', 'javascript', 'location', 'plugins',
-                   'popups', 'notifications', 'fullscreen', 'mouselock',
-                   'microphone', 'camera', 'unsandboxedPlugins',
-                   'automaticDownloads'];
-      types.forEach(function(type) {
+    function settingChanged() {
+        var type = this.id;
+        var setting = this.value;
+        var pattern = /^file:/.test(url) ? url : url.replace(/\/[^\/]*?$/, '/*');
+        console.log(type + ' setting for ' + pattern + ': ' + setting);
         // HACK: [type] is not recognised by the docserver's sample crawler, so
         // mention an explicit
-        // type: chrome.contentSettings.cookies.get - See http://crbug.com/299634
-        chrome.contentSettings[type] && chrome.contentSettings[type].get({
-              'primaryUrl': url,
-              'incognito': incognito
-            },
-            function(details) {
-              var input = <HTMLInputElement>document.getElementById(type);
-              input.disabled = false;
-              input.value = details.setting;
-            });
-      });
-    });
-
-    var selects = document.querySelectorAll('select');
-    for (var i = 0; i < selects.length; i++) {
-      selects[i].addEventListener('change', settingChanged);
+        // type: chrome.contentSettings.cookies.set - See http://crbug.com/299634
+        chrome.contentSettings[type].set({
+            'primaryPattern': pattern,
+            'setting': setting,
+            'scope': (incognito ? 'incognito_session_only' : 'regular')
+        });
     }
-  });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        chrome.tabs.query({ active: true, currentWindow: true, url: ['http://*/*', 'https://*/*'] }, function (tabs) {
+            var current = tabs[0];
+            incognito = current.incognito;
+            url = current.url;
+            var types = ['cookies', 'images', 'javascript', 'location', 'plugins',
+                'popups', 'notifications', 'fullscreen', 'mouselock',
+                'microphone', 'camera', 'unsandboxedPlugins',
+                'automaticDownloads'];
+            types.forEach(function (type) {
+                // HACK: [type] is not recognised by the docserver's sample crawler, so
+                // mention an explicit
+                // type: chrome.contentSettings.cookies.get - See http://crbug.com/299634
+                chrome.contentSettings[type] && chrome.contentSettings[type].get({
+                    'primaryUrl': url,
+                    'incognito': incognito
+                },
+                    function (details) {
+                        var input = <HTMLInputElement>document.getElementById(type);
+                        input.disabled = false;
+                        input.value = details.setting;
+                    });
+            });
+        });
+
+        var selects = document.querySelectorAll('select');
+        for (var i = 0; i < selects.length; i++) {
+            selects[i].addEventListener('change', settingChanged);
+        }
+    });
 }
 
 // https://developer.chrome.com/extensions/runtime#method-openOptionsPage
 function testOptionsPage() {
-  chrome.runtime.openOptionsPage();
-  chrome.runtime.openOptionsPage(function() {
-    // Do a thing ...
-  });
+    chrome.runtime.openOptionsPage();
+    chrome.runtime.openOptionsPage(function () {
+        // Do a thing ...
+    });
 }
 
 // https://developer.chrome.com/extensions/debugger
 function testDebugger() {
-	chrome.debugger.attach({tabId: 123}, '1.23', () => {
-		console.log('This is a callback!');
-	});
+    chrome.debugger.attach({ tabId: 123 }, '1.23', () => {
+        console.log('This is a callback!');
+    });
 
-	chrome.debugger.detach({tabId: 123}, () => {
-		console.log('This is a callback!');
-	});
+    chrome.debugger.detach({ tabId: 123 }, () => {
+        console.log('This is a callback!');
+    });
 
-	chrome.debugger.sendCommand(
-		{targetId: 'abc'}, 'Debugger.Cmd', {param1: 'x'}, (result) => {
-			console.log('Do something with the result.' + result);
-	});
+    chrome.debugger.sendCommand(
+        { targetId: 'abc' }, 'Debugger.Cmd', { param1: 'x' }, (result) => {
+            console.log('Do something with the result.' + result);
+        });
 
-	chrome.debugger.getTargets((results) => {
-		for (let result of results) {
-			if (result.tabId == 123) {
-			// Do Something.
-			}
-		}
-	});
+    chrome.debugger.getTargets((results) => {
+        for (let result of results) {
+            if (result.tabId == 123) {
+                // Do Something.
+            }
+        }
+    });
 
-	chrome.debugger.onEvent.addListener((source, methodName, params) => {
-		if (source.tabId == 123) {
-			console.log('Hello World.');
-		}
-	});
+    chrome.debugger.onEvent.addListener((source, methodName, params) => {
+        if (source.tabId == 123) {
+            console.log('Hello World.');
+        }
+    });
 
-	chrome.debugger.onDetach.addListener((source, reason) => {
-		if (source.tabId == 123) {
-			console.log('Hello World.');
-		}
-	});
+    chrome.debugger.onDetach.addListener((source, reason) => {
+        if (source.tabId == 123) {
+            console.log('Hello World.');
+        }
+    });
 }
 
 // https://developer.chrome.com/extensions/storage#type-StorageArea
@@ -359,8 +363,8 @@ function testStorage() {
         console.log("done");
     }
 
-    chrome.storage.sync.set({ foo: 1, bar: 2});
-    chrome.storage.sync.set({ foo: 1, bar: 2}, doneCallback);
+    chrome.storage.sync.set({ foo: 1, bar: 2 });
+    chrome.storage.sync.set({ foo: 1, bar: 2 }, doneCallback);
 
     chrome.storage.sync.remove("myKey");
     chrome.storage.sync.remove("myKey", doneCallback);
