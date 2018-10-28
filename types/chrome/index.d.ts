@@ -1,6 +1,6 @@
 // Type definitions for Chrome extension development
 // Project: http://developer.chrome.com/extensions/
-// Definitions by: Matthew Kimber <https://github.com/matthewkimber>, otiai10 <https://github.com/otiai10>, couven92 <https://github.com/couven92>, RReverser <https://github.com/rreverser>, sreimer15 <https://github.com/sreimer15>
+// Definitions by: Matthew Kimber <https://github.com/matthewkimber>, otiai10 <https://github.com/otiai10>, couven92 <https://github.com/couven92>, RReverser <https://github.com/rreverser>, sreimer15 <https://github.com/sreimer15>, Nikolai Ommundsen <https://github.com/niikoo>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.4
 
@@ -11,6 +11,51 @@
 ////////////////////
 interface Window {
     chrome: typeof chrome;
+}
+
+declare namespace chrome {
+    // #region internal
+    //////////////
+    // INTERNAL //
+    //////////////
+
+    /** @deprecated Could be used, if e.g. deprecated recently */
+    type deprecatedButUsable = any;
+
+    /** @deprecated Should never be used, used to guide migrations. */
+    type deprecated = never;
+
+    /**
+     * Convert constant and variables that function as enums to string literals.
+     * Makes it possible to use both the enum and string.
+     * String enums are a combination of 'enum type' and string literal type.
+     */
+    type IDict<T, K, F = K extends keyof T ? T[K] : never> = F;
+    type ToStringLiteral<
+        C extends Object,
+        K = keyof C,
+        V = K extends keyof C ? Exclude<K, C[K]> : never> = IDict<C, V>;
+
+    /**
+     * Integer
+     * -
+     * Chrome uses JS number, but internally requires an integer or double.
+     * This is a helper type to prevent mixup.
+     */
+    type integer = number; // | 'integer';
+
+    ///
+    /// BigInt is supported in Chrome now, but not in the api.
+    /// TypeScript doesn't support it either, so till then, use helper types.
+    ///
+
+    /**
+     * Double
+     * -
+     * Chrome uses JS number, but internally requires an integer or double.
+     * This is a helper type to prevent mixup.
+     */
+    type double = number; // | 'double';
 }
 
 ////////////////////
@@ -1574,7 +1619,7 @@ declare namespace chrome.declarativeContent {
 
     /** Matches the state of a web page by various criteria. */
     export class PageStateMatcher {
-        constructor (options: PageStateMatcherProperties);
+        constructor(options: PageStateMatcherProperties);
     }
 
     /** Declarative event action that shows the extension's page action while the corresponding conditions are met. */
