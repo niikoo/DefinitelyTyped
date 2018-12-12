@@ -1,4 +1,4 @@
-// Type definitions for Google Apps Script 2018-10-24
+// Type definitions for Google Apps Script 2018-12-12
 // Project: https://developers.google.com/apps-script/
 // Definitions by: motemen <https://github.com/motemen/>, niikoo <https://github.com/niikoo>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -9,8 +9,8 @@
 /// <reference path="google-apps-script.drive.d.ts" />
 
 declare namespace Spreadsheet {
-  type Column = string | number | boolean | Date;
-  type Row = Column[] | string[];
+  type Column = string | number | boolean | Date | 'column';
+  type Row = Column[] | string[] | 'row';
 
   /**
    * An enumeration of the types of series used to calculate auto-filled values. The manner in which
@@ -1373,6 +1373,106 @@ declare namespace Spreadsheet {
     getCurrentCell(): Range;
     getNextDataRange(direction: Direction): Range;
   }
+
+  /**
+   * Behavior common to all images in a spreadsheet.
+   */
+  interface Image {
+    /** Returns the actual height of this image in pixels. */
+    getHeight(): Integer;
+    /** Returns the name of the function assigned to this image. */
+    getScript(): string;
+    /** Returns the sheet this image appears on */
+    getSheet(): Sheet;
+    /**
+     * Returns a Google-hosted URL to the image.
+     * This is not the same URL used to originally
+     * specify the image and is only guaranteed to
+     * be valid as long as the image is not deleted
+     * from the spreadsheet.
+     */
+    getUrl(): string;
+    /** Returns the actual width of this image in pixels. */
+    getWidth(): Integer;
+    /**
+     * Deletes this image from the spreadsheet.
+     * Any further operation on the image results in a script error.
+     */
+    remove(): void;
+    /**
+     * Sets the actual height of this image in pixels.
+     * @param height The desired height in pixels.
+     */
+    setHeight(height: Integer): Image;
+    /**
+     * Sets the actual width of this image in pixels.
+     * @param width The desired width in pixels.
+     */
+    setWidth(width: Integer): Image;
+  }
+
+  /**
+   * Represents an image over the grid in a spreadsheet.
+   */
+  interface OverGridImage extends Image {
+    /**
+     * Assigns the function with the specified function name to this image.
+     * @param functionName The name of the function being specified.
+     */
+    assignScript(functionName: string): OverGridImage;
+    /** Returns the alt-text description for this image. */
+    getAltTextDescription(): string;
+    /** Returns the alt-text title for this image. */
+    getAltTextTitle(): string;
+    /** Returns the cell where an image is anchored. */
+    getAnchorCell(): Range;
+    /** Returns the horizontal pixel offset from the anchor cell. */
+    getAnchorCellXOffset(): Integer;
+    /** Returns the vertical pixel offset from the anchor cell. */
+    getAnchorCellYOffset(): Integer;
+    /** Returns the inherent height of this image in pixels. */
+    getInherentHeight(): Integer;
+    /** Returns the inherent height of this image in pixels. */
+    getInherentWidth(): Integer;
+    /**
+     * Replaces this image with the one specified by the provided BlobSource.
+     * @param blob The new image as a Blob.
+     */
+    replace(blob: Base.BlobSource): OverGridImage;
+    /**
+     * Replaces this image with the one from the specified URL.
+     * @param url The URL of the new image.
+     */
+    replace(url: string): OverGridImage;
+    /** Resets this image to its inherent dimensions. */
+    resetSize(): OverGridImage;
+    /**
+     * Sets the alt-text description for this image.
+     * @param description The new alt-text description for the image.
+     */
+    setAltTextDescription(description: string): OverGridImage;
+    /**
+     * Sets the alt-text title for this image.
+     * @param title The new alt-text title for the image.
+     */
+    setAltTextTitle(title: string): OverGridImage;
+    /**
+     * Sets the cell where an image is anchored.
+     * @param cell The new anchor cell.
+     */
+    setAnchorCell(cell: Range): OverGridImage;
+    /**
+     * Sets the horizontal pixel offset from the anchor cell.
+     * @param offset The new horizonal pixel offset.
+     */
+    setAnchorCellXOffset(offset: Integer): OverGridImage
+    /**
+     * Sets the vertical pixel offset from the anchor cell.
+     * @param offset The new vertical pixel offset.
+     */
+    setAnchorCellYOffset(offset: Integer): OverGridImage;
+  }
+
   interface ClearOptions {
     /** Whether to clear the content. */
     contentsOnly: boolean;
@@ -1490,31 +1590,126 @@ declare namespace Spreadsheet {
     getFormUrl(): string;
     getFrozenColumns(): Integer;
     getFrozenRows(): Integer;
+    /** Returns all over-the-grid images on the sheet. */
+    getImages(): OverGridImage[];
+    /** Gets the position of the sheet in its parent spreadsheet. Starts at 1. */
     getIndex(): Integer;
+    /** Returns the position of the last column that has content. */
     getLastColumn(): Integer;
+    /** Returns the position of the last row that has content. */
     getLastRow(): Integer;
+    /** Returns the current number of columns in the sheet, regardless of content. */
     getMaxColumns(): Integer;
+    /** Returns the current number of rows in the sheet, regardless of content. */
     getMaxRows(): Integer;
+    /** Returns the name of the sheet. */
     getName(): string;
+    /** Gets all the named ranges in this sheet. */
     getNamedRanges(): NamedRange[];
+    /** Returns the Spreadsheet that contains this sheet. */
     getParent(): Spreadsheet;
+    /** Returns all the pivot tables on this sheet. */
     getPivotTables(): PivotTable[];
+    /**
+     * Gets an array of objects representing all protected ranges in the sheet,
+     * or a single-element array representing the protection on the sheet itself.
+     * @param type The type of protected area, either SpreadsheetApp.ProtectionType.RANGE or SpreadsheetApp.ProtectionType.SHEET.
+     * @returns an array of objects representing all protected ranges in the sheet, or a single-element array representing the protection on the sheet itself
+     */
     getProtections(type: ProtectionType): Protection[];
+    /**
+     * Returns the range with the top left cell at the given coordinates.
+     * @param row The row of the cell to return.
+     * @param column The column of the cell to return.
+     */
     getRange(row: Integer, column: Integer): Range;
+    /**
+     * Returns the range with the top left cell at the given coordinates, and with the given number of rows.
+     * @param row The starting row of the range.
+     * @param column The column of the range.
+     * @param numRows The number of rows to return.
+     */
     getRange(row: Integer, column: Integer, numRows: Integer): Range;
+    /**
+     * Returns the range with the top left cell at the given coordinates with the given number of rows and columns.
+     * @param row The starting row of the range.
+     * @param column The starting column of the range.
+     * @param numRows The number of rows to return.
+     * @param numColumns The number of columns to return.
+     */
     getRange(row: Integer, column: Integer, numRows: Integer, numColumns: Integer): Range;
+    /**
+     * Returns the range as specified in A1 notation or R1C1 notation.
+     * @param a1Notation The range to return, as specified in A1 notation or R1C1 notation.
+     */
     getRange(a1Notation: string): Range;
+    /**
+     * Returns the RangeList collection representing the ranges in the same sheet specified by a non-empty list of A1 notations or R1C1 notations.
+     * @param a1Notations The list of ranges to return, as specified in A1 notation or R1C1 notation.
+     */
     getRangeList(a1Notations: string[]): RangeList;
+    /**
+     * Returns the row group at the given index and group depth.
+     * @param rowIndex The row index of the group control toggle or an index within the group.
+     * @param groupDepth The depth of the group.
+     */
     getRowGroup(rowIndex: Integer, groupDepth: Integer): Group;
+    /** Returns the `GroupControlTogglePosition` for all row groups on the sheet. */
     getRowGroupControlPosition(): GroupControlTogglePosition;
+    /**
+     * Returns the group depth of the row at the given index.
+     * The group depth indicates how many groups overlap with the row.
+     * This can range between zero and eight.
+     * @param rowIndex The index of the row.
+     */
     getRowGroupDepth(rowIndex: Integer): Integer;
+    /**
+     * Gets the height in pixels of the given row.
+     * @param rowPosition The position of the row to examine.
+     */
     getRowHeight(rowPosition: Integer): Integer;
+    /** Returns the current Selection in the spreadsheet. */
     getSelection(): Selection;
+    /**
+     * Returns the ID of the sheet represented by this object.
+     * This is an ID for the sheet that is unique to the spreadsheet.
+     * 
+     * The ID is a monotonically increasing integer assigned at
+     * sheet creation time that is independent of sheet position.
+     * 
+     * This is useful in conjunction with methods such as
+     * `Range.copyFormatToRange(gridId, column, columnEnd, row, rowEnd)`
+     * that take a `gridId` parameter rather than a `Sheet` instance.
+     */
     getSheetId(): Integer;
+    /** Returns the sheet name. */
     getSheetName(): string;
-    getSheetValues(startRow: Integer, startColumn: Integer, numRows: Integer, numColumns: Integer): any[][];
+    /**
+     * Returns the rectangular grid of values for this range starting at the given coordinates.
+     * A -1 value given as the row or column position is equivalent to getting
+     * the very last row or column that has data in the sheet.
+     * @param startRow The position of the starting row.
+     * @param startColumn The position of the starting column.
+     * @param numRows The number of rows to return values for.
+     * @param numColumns The number of columns to return values for.
+     * @returns A two-dimensional array of values
+     */
+    getSheetValues(startRow: Integer, startColumn: Integer, numRows: Integer, numColumns: Integer): Row[];
+    /**
+     * Gets the sheet tab color, or null if the sheet tab has no color.
+     * @returns color code in CSS notation (such as '#ffffff')
+     */
     getTabColor(): string;
+    /**
+     * Returns `true` if the sheet's gridlines are hidden; otherwise returns `false`.
+     * Gridlines are visible by default.
+     * @returns `true` if gridlines are hidden; `false` otherwise.
+     */
     hasHiddenGridlines(): boolean;
+    /**
+     * Hides the columns in the given range.
+     * @param column The column range to hide.
+     */
     hideColumn(column: Range): void;
     hideColumns(columnIndex: Integer): void;
     hideColumns(columnIndex: Integer, numColumns: Integer): void;
@@ -1529,10 +1724,10 @@ declare namespace Spreadsheet {
     insertColumns(columnIndex: Integer, numColumns: Integer): void;
     insertColumnsAfter(afterPosition: Integer, howMany: Integer): Sheet;
     insertColumnsBefore(beforePosition: Integer, howMany: Integer): Sheet;
-    insertImage(blobSource: Base.BlobSource, column: Integer, row: Integer): void;
-    insertImage(blobSource: Base.BlobSource, column: Integer, row: Integer, offsetX: Integer, offsetY: Integer): void;
-    insertImage(url: string, column: Integer, row: Integer): void;
-    insertImage(url: string, column: Integer, row: Integer, offsetX: Integer, offsetY: Integer): void;
+    insertImage(blobSource: Base.BlobSource, column: Integer, row: Integer): OverGridImage;
+    insertImage(blobSource: Base.BlobSource, column: Integer, row: Integer, offsetX: Integer, offsetY: Integer): OverGridImage;
+    insertImage(url: string, column: Integer, row: Integer): OverGridImage;
+    insertImage(url: string, column: Integer, row: Integer, offsetX: Integer, offsetY: Integer): OverGridImage;
     insertRowAfter(afterPosition: Integer): Sheet;
     insertRowBefore(beforePosition: Integer): Sheet;
     insertRows(rowIndex: Integer): void;

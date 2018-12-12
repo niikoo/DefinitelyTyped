@@ -110,3 +110,48 @@ function modifySheets(action: string) {
         currentSheet.clear();
     }
 }
+
+// Logs the height of all images in a spreadsheet
+// Source: https://developers.google.com/apps-script/reference/spreadsheet/over-grid-image
+var images = SpreadsheetApp.getActiveSpreadsheet().getImages();
+for (var i = 0; i < images.length; i++) {
+    Logger.log(images[i].getHeight());
+}
+
+// Logs the parent sheet of all images in a spreadsheet
+// Source: https://developers.google.com/apps-script/reference/spreadsheet/over-grid-image
+var images = SpreadsheetApp.getActiveSpreadsheet().getImages();
+for (var i = 0; i < images.length; i++) {
+    Logger.log(images[i].getSheet());
+}
+
+// Source: https://developers.google.com/apps-script/reference/spreadsheet/sheet
+// Remove all range protections in the spreadsheet that the user has permission to edit.
+var protections = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE);
+for (var i = 0; i < protections.length; i++) {
+    var protection = protections[i];
+    if (protection.canEdit()) {
+        protection.remove();
+    }
+}
+// Remove sheet protection from the active sheet, if the user has permission to edit it.
+var protection = sheet.getProtections(SpreadsheetApp.ProtectionType.SHEET)[0];
+if (protection && protection.canEdit()) {
+    protection.remove();
+}
+
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = ss.getSheets()[0];
+// When the "numRows" argument is used, only a single column of data is returned.
+var range = sheet.getRange(1, 1, 3);
+var values = range.getValues();
+
+// Prints 3 values from the first column, starting from row 1.
+for (var row in values) {
+    for (var col in values[row]) {
+        Logger.log(values[row][col]);
+    }
+}
+var rangeList = sheet.getRangeList(['A1:D4', 'F1:H4']);
+Logger.log(sheet.getSheetId());
+

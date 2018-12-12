@@ -49,10 +49,10 @@ const postTest = (payload: Object): string => {
 };
 
 
-const ss = SpreadsheetApp.getActiveSpreadsheet();
-const sheet = ss.getSheets()[0];
-const range = sheet.getRange("B2:D2");
-const cell = sheet.getRange("B2");
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = ss.getSheets()[0];
+var range = sheet.getRange("B2:D2");
+var cell = sheet.getRange("B2");
 // The size of the two-dimensional array must match the size of the range.
 var fontLines: Spreadsheet.FontLineStyle[][] = [
     ["underline", "line-through", "none"]
@@ -97,7 +97,7 @@ function logProductInfo() {
 
 function addProduct() {
     var sheet = SpreadsheetApp.getActiveSheet();
-    sheet.appendRow(['Cotton Sweatshirt XL', 'css004']);
+    sheet.appendRow(['Cotton Swgeatshirt XL', 'css004']);
 }
 
 function formatMySpreadsheet() {
