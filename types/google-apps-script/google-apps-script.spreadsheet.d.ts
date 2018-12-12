@@ -10,7 +10,9 @@
 
 declare namespace Spreadsheet {
   type Column = string | number | boolean | Date | 'column';
-  type Row = Column[] | string[] | 'row';
+  interface Row {
+    [index: number]: Column[] | string[] | 'row';
+  }
 
   /**
    * An enumeration of the types of series used to calculate auto-filled values. The manner in which
@@ -999,10 +1001,9 @@ declare namespace Spreadsheet {
 
   /**
    * Access and modify protected ranges and sheets. A protected range can protect either a static
-   * range of cells or a named range. A protected sheet may include unprotected regions. For
-   * spreadsheets created with the older version of Google Sheets, use the PageProtection
-   * class instead.
+   * range of cells or a named range. A protected sheet may include unprotected regions.
    *
+   * @example
    *     // Protect range A1:B10, then remove all other users from the list of editors.
    *     var ss = SpreadsheetApp.getActive();
    *     var range = ss.getRange('A1:B10');
@@ -1041,28 +1042,168 @@ declare namespace Spreadsheet {
    *     }
    */
   interface Protection {
+    /**
+     * Adds the given user to the list of editors for the protected sheet or range.
+     * 
+     * This method does not automatically give the user permission to edit the spreadsheet itself; 
+     * to do that in addition, call ´Spreadsheet.addEditor(emailAddress)´.
+     * @param emailAddress The email address of the user to add.
+     */
     addEditor(emailAddress: string): Protection;
+    /**
+     * Adds the given user to the list of editors for the protected sheet or range.
+     * This method does not automatically give the user permission to edit the spreadsheet itself;
+     * to do that in addition, call ´Spreadsheet.addEditor(user)´.
+     * @param user A representation of the user to add.
+     */
     addEditor(user: Base.User): Protection;
+    /**
+     * Adds the given array of users to the list of editors for the protected sheet or range.
+     * This method does not automatically give the users permission to edit the spreadsheet itself;
+     * to do that in addition, call ´Spreadsheet.addEditors(emailAddresses)´.
+     * @param emailAddresses An array of email addresses of the users to add.
+     */
     addEditors(emailAddresses: string[]): Protection;
+    /**
+     * Determines whether all users in the domain that owns the spreadsheet have permission to edit the protected range or sheet.
+     * Throws an exception if the user does not have permission to edit the protected range or sheet.
+     * @returns `true` if all users in the domain that owns the spreadsheet have permission to edit the protected range or sheet; `false` if not.
+     */
     canDomainEdit(): boolean;
+    /**
+     * Determines whether the user has permission to edit the protected range or sheet.
+     * The spreadsheet owner is always able to edit protected ranges and sheets.
+     */
     canEdit(): boolean;
+    /**
+     * Gets the description of the protected range or sheet.
+     * If no description is set, this method returns an empty string.
+     */
     getDescription(): string;
+    /**
+     * Gets the list of editors for the protected range or sheet.
+     * Throws an exception if the user does not have permission to edit the protected range or sheet.
+     */
     getEditors(): Base.User[];
+    /**
+     * Gets the type of the protected area, either `RANGE` or `SHEET`.
+     */
     getProtectionType(): ProtectionType;
+    /**
+     * Gets the range that is being protected.
+     * If the protection applies to the sheet instead of a range, this method returns a range that spans the entire sheet.
+     */
     getRange(): Range;
-    getRangeName(): string;
+    /**
+     * Gets the name of the protected range if it is associated with a named range.
+     * Returns `null` if the protection is not associated with a named range.
+     * 
+     * Note that scripts must explicitly call `setRangeName(rangeName)` to associate a protected range with a named range;
+     * calling `Range.protect()` to create a protection from a Range that happens to be a named range, without calling `setRangeName(rangeName)`,
+     * is not sufficient to associate them. However, creating a protected range from a named range in the Google Sheets UI associates them automatically.
+     */
+    getRangeName(): string | null;
+    /**
+     * Gets an array of unprotected ranges within a protected sheet.
+     * If the `Protection` object corresponds to a protected range instead of a protected sheet,
+     * this method returns an empty array. To change the unprotected ranges, use `setUnprotectedRanges(ranges)`
+     * to set a new array of ranges; to re-protect the entire sheet, set an empty array.
+     */
     getUnprotectedRanges(): Range[];
+    /**
+     * Determines if the protected area is using "warning based" protection.
+     * Warning-based protection means that every user can edit data in the area,
+     * except editing prompts a warning asking the user to confirm the edit.
+     * By default, protected ranges or sheets are not warning-based.
+     * To change to the warning state, use `setWarningOnly(warningOnly)`.
+     */
     isWarningOnly(): boolean;
+    /** Unprotects the range or sheet. */
     remove(): void;
+    /**
+     * Removes the given user from the list of editors for the protected sheet or range.
+     * Note that if the user is a member of a Google Group that has edit permission,
+     * or if all users in the domain have edit permission, the user are still be able to edit the protected area.
+     * Neither the owner of the spreadsheet nor the current user can be removed.
+     * @param emailAddress The email address of the user to remove.
+     */
     removeEditor(emailAddress: string): Protection;
+    /**
+     * Removes the given user from the list of editors for the protected sheet or range.
+     * Note that if the user is a member of a Google Group that has edit permission,
+     * or if all users in the domain have edit permission, the user are still be able to edit the protected area.
+     * Neither the owner of the spreadsheet nor the current user can be removed.
+     * @param user A representation of the user to remove.
+     */
     removeEditor(user: Base.User): Protection;
+    /**
+     * Removes the given user from the list of editors for the protected sheet or range.
+     * Note that if the user is a member of a Google Group that has edit permission,
+     * or if all users in the domain have edit permission, the user are still be able to edit the protected area.
+     * Neither the owner of the spreadsheet nor the current user can be removed.
+     * @param emailAddresses An array of email addresses of the users to remove.
+     */
     removeEditors(emailAddresses: string[]): Protection;
+    /**
+     * Sets the description of the protected range or sheet.
+     * @param description The description of the protected range or sheet.
+     */
     setDescription(description: string): Protection;
+    /**
+     * Sets whether all users in the domain that owns the spreadsheet have permission to edit the protected range or sheet.
+     * Note that any users who have explicit edit permission are able to edit the protected area regardless of this setting.
+     * Throws an exception if the spreadsheet does not belong to a G Suite domain (that is, if it is owned by a gmail.com account).
+     * @param editable `true` if all users in the domain that owns the spreadsheet should have permission to edit the protected range or sheet; `false` if not.
+     */
     setDomainEdit(editable: boolean): Protection;
+    /**
+     * Associates the protected range with an existing named range.
+     * If the named range covers a different area from the current protected range,
+     * this method moves the protection to cover the the named range instead.
+     * The named range must be on the same sheet as the current protected range.
+     * Note that scripts must explicitly call this method to associate a protected range with a named range;
+     * calling `Range.protect()` to create a protection from a `Range` that happens to be a named range,
+     * without calling `setRangeName(rangeName)`, is not sufficient to associate them.
+     * However, creating a protected range from a named range in the Google Sheets UI associates them automatically.
+     * @param namedRange The existing named range to associate with the protected range.
+     */
     setNamedRange(namedRange: NamedRange): Protection;
+    /**
+     * Adjusts the range that is being protected.
+     * If the given range covers a different area from the current protected range,
+     * this method moves the protection to cover the new range instead.
+     * @param range 
+     */
     setRange(range: Range): Protection;
+    /**
+     * Associates the protected range with an existing named range.
+     * If the named range covers a different area from the current protected range,
+     * this method moves the protection to cover the the named range instead.
+     * The named range must be on the same sheet as the current protected range.
+     * Note that scripts must explicitly call this method to associate a protected range with a named range;
+     * calling `Range.protect()` to create a protection from a `Range` that happens to be a named range,
+     * without calling `setRangeName(rangeName)`, is not sufficient to associate them.
+     * However, creating a protected range from a named range in the Google Sheets UI associates them automatically.
+     * @param rangeName The name of the named range to be protected.
+     */
     setRangeName(rangeName: string): Protection;
+    /**
+     * Unprotects the given array of ranges within a protected sheet.
+     * Throws an exception if the `Protection` object corresponds to a protected range
+     * instead of a protected sheet or if any of the ranges are not on the protected sheet.
+     * To change the unprotected ranges, set a new array of ranges;
+     * to re-protect the entire sheet, set an empty array.
+     * @param ranges The array of ranges to leave unprotected within a protected sheet.
+     */
     setUnprotectedRanges(ranges: Range[]): Protection;
+    /**
+     * Sets whether or not this protected range is using "warning based" protection.
+     * Warning-based protection means that every user can edit data in the area,
+     * except editing prompts a warning asking the user to confirm the edit.
+     * By default, protected ranges or sheets are not warning-based.
+     * To check warning state, use `isWarningOnly()`.
+     * @param warningOnly 
+     */
     setWarningOnly(warningOnly: boolean): Protection;
   }
 
@@ -1711,36 +1852,218 @@ declare namespace Spreadsheet {
      * @param column The column range to hide.
      */
     hideColumn(column: Range): void;
+    /**
+     * Hides the column at the given index.
+     * @param columnIndex the index of the column to hide
+     */
     hideColumns(columnIndex: Integer): void;
+    /**
+     * Hides one or more consecutive columns starting at the given index.
+     * @param columnIndex Hides one or more consecutive columns starting at the given index.
+     * @param numColumns The number of columns to hide.
+     */
     hideColumns(columnIndex: Integer, numColumns: Integer): void;
+    /**
+     * Hides the rows in the given range.
+     * @param row The row range to hide.
+     */
     hideRow(row: Range): void;
+    /**
+     * Hides the row at the given index.
+     * @param rowIndex The index of the row to hide.
+     */
     hideRows(rowIndex: Integer): void;
+    /**
+     * Hides one or more consecutive rows starting at the given index.
+     * @param rowIndex The starting index of the rows to hide.
+     * @param numRows The number of rows to hide.
+     */
     hideRows(rowIndex: Integer, numRows: Integer): void;
+    /**
+     * Hides this sheet.
+     * Has no effect if the sheet is already hidden.
+     * If this method is called on the only visible sheet, it throws an exception.
+     */
     hideSheet(): Sheet;
+    /**
+     * Adds a new chart to this sheet.
+     * @param chart the chart to insert
+     */
     insertChart(chart: EmbeddedChart): void;
+    /** Inserts a column after the given column position. */
     insertColumnAfter(afterPosition: Integer): Sheet;
+    /** Inserts a column before the given column position. */
     insertColumnBefore(beforePosition: Integer): Sheet;
+    /**
+     * Inserts a blank column in a sheet at the specified location.
+     * @param columnIndex The index indicating where to insert a column.
+     */
     insertColumns(columnIndex: Integer): void;
+    /**
+     * Inserts one or more consecutive blank columns in a sheet starting at the specified location.
+     * @param columnIndex The index indicating where to insert a column.
+     * @param numColumns The number of columns to insert.
+     */
     insertColumns(columnIndex: Integer, numColumns: Integer): void;
+    /**
+     * Inserts a number of columns after the given column position.
+     * @param afterPosition The column after which the new column should be added.
+     * @param howMany The number of columns to insert.
+     */
     insertColumnsAfter(afterPosition: Integer, howMany: Integer): Sheet;
+    /**
+     * Inserts a number of columns before the given column position.
+     * @param beforePosition The column before which the new column should be added.
+     * @param howMany The number of columns to insert.
+     */
     insertColumnsBefore(beforePosition: Integer, howMany: Integer): Sheet;
+    /**
+     * Inserts a `BlobSource` as an image in the document at a given row and column.
+     * The image size is retrieved from the blob contents.
+     * @param blobSource The blob containing the image contents, MIME type, and (optionally) name.
+     * @param column The column position.
+     * @param row The row position.
+     */
     insertImage(blobSource: Base.BlobSource, column: Integer, row: Integer): OverGridImage;
+    /**
+     * Inserts a `BlobSource` as an image in the document at a given row and column, with a pixel offset.
+     * The image size is retrieved from the blob contents.
+     * @param blobSource The blob containing the image contents, MIME type, and (optionally) name.
+     * @param column The column position.
+     * @param row The row position.
+     * @param offsetX The horizontal offset from cell corner in pixels.
+     * @param offsetY The vertical offset from cell corner in pixels.
+     */
     insertImage(blobSource: Base.BlobSource, column: Integer, row: Integer, offsetX: Integer, offsetY: Integer): OverGridImage;
+    /**
+     * Inserts an image in the document at a given row and column.
+     * @param url The URL of the image.
+     * @param column The column position.
+     * @param row The row position.
+     * @param offsetX The horizontal offset from cell corner in pixels.
+     * @param offsetY The vertical offset from cell corner in pixels.
+     */
     insertImage(url: string, column: Integer, row: Integer): OverGridImage;
+    /**
+     * Inserts an image in the document at a given row and column, with a pixel offset.
+     * @param url The URL of the image.
+     * @param column The column position.
+     * @param row The row position.
+     * @param offsetX The horizontal offset from cell corner in pixels.
+     * @param offsetY The vertical offset from cell corner in pixels.
+     */
     insertImage(url: string, column: Integer, row: Integer, offsetX: Integer, offsetY: Integer): OverGridImage;
+    /**
+     * Inserts a row after the given row position.
+     * @param afterPosition The row after which the new row should be added.
+     */
     insertRowAfter(afterPosition: Integer): Sheet;
+    /**
+     * Inserts a row before the given row position.
+     * @param beforePosition The row before which the new row should be added.
+     */
     insertRowBefore(beforePosition: Integer): Sheet;
+    /**
+     * Inserts a blank row in a sheet at the specified location.
+     * @param rowIndex The index indicating where to insert a row.
+     */
     insertRows(rowIndex: Integer): void;
+    /**
+     * Inserts one or more consecutive blank rows in a sheet starting at the specified location.
+     * @param rowIndex The index indicating where to insert a row.
+     * @param numRows The number of rows to insert.
+     */
     insertRows(rowIndex: Integer, numRows: Integer): void;
+    /**
+     * Inserts a number of rows after the given row position.
+     * @param afterPosition The row after which the new rows should be added.
+     * @param howMany The number of rows to insert.
+     */
     insertRowsAfter(afterPosition: Integer, howMany: Integer): Sheet;
+    /**
+     * Inserts a number of rows before the given row position.
+     * @param beforePosition The row before which the new rows should be added.
+     * @param howMany The number of rows to insert.
+     */
     insertRowsBefore(beforePosition: Integer, howMany: Integer): Sheet;
+    /**
+     * Returns whether the given column is hidden by the user.
+     * @param columnPosition The position of the column to examine.
+     */
+    isColumnHiddenByUser(columnPosition: Integer): boolean;
+    /**
+     * Returns true if this sheet layout is right-to-left.
+     * Returns false if the sheet uses the default left-to-right layout.
+     */
     isRightToLeft(): boolean;
+    /**
+     * Returns whether the given row is hidden by a filter (not a filter view).
+     * @param rowPosition The position of the row to examine.
+     */
+    isRowHiddenByFilter(rowPosition: Integer): boolean;
+    /**
+     * Returns whether the given row is hidden by the user.
+     * @param rowPosition The position of the row to examine.
+     */
+    isRowHiddenByUser(rowPosition: Integer): boolean;
+    /** Returns true if the sheet is currently hidden. */
     isSheetHidden(): boolean;
+    /**
+     * Moves the columns selected by the given range to the position indicated by the `destinationIndex`.
+     * The `columnSpec` itself does not have to exactly represent an entire column or group of columns
+     * to move—it selects all columns that the range spans.
+     * @param columnSpec A range spanning the columns that should be moved.
+     * @param destinationIndex The index that the columns should be moved to.
+     * Note that this index is based on the coordinates before the columns are moved.
+     * Existing data is shifted right to make room for the moved columns while
+     * the source columns are removed from the grid. Therefore, the data may
+     * end up at a different index than originally specified.
+     */
     moveColumns(columnSpec: Range, destinationIndex: Integer): void;
+    /**
+     * Moves the rows selected by the given range to the position indicated by the `destinationIndex`.
+     * The `rowSpec` itself does not have to exactly represent an entire row or group of rows to
+     * move—it selects all rows that the range spans.
+     * @param rowSpec A range spanning the rows that should be moved.
+     * @param destinationIndex The index that the rows should be moved to.
+     * Note that this index is based on the coordinates before the rows are moved.
+     * Existing data is shifted right to make room for the moved rows while
+     * the source rows are removed from the grid. Therefore, the data may
+     * end up at a different index than originally specified.
+     */
     moveRows(rowSpec: Range, destinationIndex: Integer): void;
+    /**
+     * Returns a builder to create a new chart for this sheet.
+     */
     newChart(): EmbeddedChartBuilder;
+    /**
+     * Creates an object that can protect the sheet from being edited except by users who have permission.
+     * Until the script actually changes the list of editors for the sheet
+     * (by calling
+     *  `Protection.removeEditor(emailAddress)`,
+     *  `Protection.removeEditor(user)`,
+     *  `Protection.removeEditors(emailAddresses)`,
+     *  `Protection.addEditor(emailAddress)`,
+     *  `Protection.addEditor(user)`,
+     *  `Protection.addEditors(emailAddresses)`,  
+     *  or setting a new value for   
+     *  `Protection.setDomainEdit(editable)`),   
+     * the permissions mirror those of the spreadsheet itself,
+     * which effectively means that the sheet remains unprotected.
+     * If the sheet is already protected, this method returns an object
+     * representing its existing protection settings.
+     * A protected sheet may include unprotected regions.
+     */
     protect(): Protection;
+    /**
+     * Removes a chart from the parent sheet.
+     * @param chart the chart to remove
+     */
     removeChart(chart: EmbeddedChart): void;
+    /**
+     * Sets the specified range as the `active range` in the active sheet, with the top left cell in the range as the `current cell`.
+     * @param range The range to set as the active range.
+     */
     setActiveRange(range: Range): Range;
     setActiveRangeList(rangeList: RangeList): RangeList;
     setActiveSelection(range: Range): Range;
@@ -1810,6 +2133,8 @@ declare namespace Spreadsheet {
     getFrozenColumns(): Integer;
     getFrozenRows(): Integer;
     getId(): string;
+    /** Returns all over-the-grid images on the sheet. */
+    getImages(): OverGridImage[];
     getLastColumn(): Integer;
     getLastRow(): Integer;
     getName(): string;

@@ -155,3 +155,23 @@ for (var row in values) {
 var rangeList = sheet.getRangeList(['A1:D4', 'F1:H4']);
 Logger.log(sheet.getSheetId());
 
+// Protect the active sheet, then remove all other users from the list of editors.
+var sheet = SpreadsheetApp.getActiveSheet();
+var protection = sheet.protect().setDescription('Sample protected sheet');
+
+// Protect the active sheet except B2:C5, then remove all other users from the list of editors.
+var sheet = SpreadsheetApp.getActiveSheet();
+var protection = sheet.protect().setDescription('Sample protected sheet');
+var unprotected = sheet.getRange('B2:C5');
+protection.setUnprotectedRanges([unprotected]);
+
+// Ensure the current user is an editor before removing others. Otherwise, if the user's edit
+// permission comes from a group, the script throws an exception upon removing the group.
+var me = Session.getEffectiveUser();
+protection.addEditor(me);
+protection.removeEditors(protection.getEditors());
+if (protection.canDomainEdit()) {
+    protection.setDomainEdit(false);
+}
+
+
