@@ -2065,7 +2065,10 @@ declare namespace chrome {
     namespace clipboard {
         /** Image type */
         type ImageType = 'png' | 'jpeg';
-        /** @enum */
+        /**
+         * Type of the additional data item.
+         * @enum
+         */
         const DataItemType: {
             TEXT_PLAIN: 'textPlain',
             TEXT_HTML: 'textHtml'
@@ -2087,12 +2090,12 @@ declare namespace chrome {
         /**
          * **Dev channel only.**
          * Sets image data to clipboard
-         * @param imageData The encoded image data. *Since Chrome 71. Warning: this is the current Dev channel.*
-         * @param type The type of image being passed. *Since Chrome 71. Warning: this is the current Dev channel.*
+         * @param imageData The encoded image data. *Since Chrome 73. Warning: this is the current Dev channel.*
+         * @param type The type of image being passed. *Since Chrome 73. Warning: this is the current Dev channel.*
          * @param [additionalItems] Additional data items for describing image data.
          *      The callback is called with chrome.runtime.lastError set to error code if there is an error.
          *      Requires clipboard and clipboardWrite permissions.
-         *      *Since Chrome 71. Warning: this is the current Dev channel.*
+         *      *Since Chrome 73. Warning: this is the current Dev channel.*
          * @param [callback]
          */
         function setImageData(imageData: ArrayBuffer, type: ImageType, additionalItems?: AdditionalItems, callback?: () => void): void;
