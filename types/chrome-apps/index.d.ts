@@ -12377,7 +12377,7 @@ declare namespace WebView {
             'pointerLock' |
             'download' |
             'loadplugin' |
-            'filesystem' |
+            'fileSystem' |
             'fullscreen';
 
         /**
