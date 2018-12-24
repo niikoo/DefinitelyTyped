@@ -7241,6 +7241,7 @@ declare namespace chrome {
              */
             'unlimitedStorage' |
             'usb' |
+            'fullscreen' |
             'usbDevices' |
             /** Requests that the app be granted permissions to capture video directly from the user's Web Cam via the getUserMedia API. */
             'videoCapture' |
@@ -8431,8 +8432,7 @@ declare namespace chrome {
          *                 The result code returned from the underlying network call.
          *                 A negative value indicates an error.
          */
-        function connect(socketId: integer,
-            peerAddress: string, peerPort: integer, callback: (result: integer) => void): void;
+        function connect(socketId: integer, peerAddress: string, peerPort: integer, callback: (result: integer) => void): void;
 
         /**
          * @description Disconnects the socket.
