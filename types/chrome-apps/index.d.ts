@@ -9346,7 +9346,7 @@ declare namespace chrome {
              * @deprecated Deprecated since Chrome 70. Use `displayZoomFactor`
              * @description The display mode UI scale factor.
              **/
-            uiScale: integer;
+            uiScale: double;
 
             /** The display mode device scale factor. */
             deviceScaleFactor: integer;
